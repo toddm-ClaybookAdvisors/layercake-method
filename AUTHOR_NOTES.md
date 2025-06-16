@@ -5,3 +5,7 @@ I've already done a ton of setup at this point getting the project going and cha
 *note 2*
 After prompt 7, I told CGPT to include the original text of my prompts along with the "instructions" which are an interpretation of the original prompt.
 
+*note 3*
+After prompt 10, the chat started to get slow and stupid. I just spent a bunch of time creating the transition process between chats and added an index now that I have things checked into github
+
+
