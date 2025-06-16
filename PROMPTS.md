@@ -53,4 +53,16 @@ Create a `.gitignore` file for a Python project that includes standard Python ex
 → See: .gitignore  
 → Commit: 0004 (Add .gitignore for Python and VS Code)
 
+## Prompt 0005: Add Screen Clearing and Real-Time Input to Game Loop
+
+**Instruction:**
+
+Update the basic ASCII game loop so that the screen clears on every frame and player movement works without pressing Enter. Use only built-in libraries. It should work on macOS and Linux in the terminal (no GUI). If necessary, use `msvcrt` only on Windows, and fallback to `termios` and `tty` elsewhere.
+
+**Result:**
+
+→ See: game/game.py  
+→ Commit: 0005 (Add screen clearing and real-time input to game loop)
+
+
 

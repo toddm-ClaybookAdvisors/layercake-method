@@ -8,3 +8,16 @@ Here is a minimal Python implementation of a game loop that displays a 10x5 ASCI
 
 Here's a `.gitignore` file tailored for Python development, including virtual environments, compiled files, cache directories, and VS Code-specific workspace metadata. This will keep unnecessary files out of version control.
 
+## Prompt 0005: Add Screen Clearing and Real-Time Input to Game Loop
+
+This update enhances the game loop by:
+- Clearing the screen between frames using `os.system()`
+- Capturing keypresses without requiring the Enter key
+- Using platform-specific methods:
+  - `msvcrt` on Windows
+  - `termios` + `tty` on POSIX systems (macOS, Linux)
+
+The code remains cross-platform and uses only built-in libraries.
+
+
+

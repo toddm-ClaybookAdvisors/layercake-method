@@ -1,28 +1,45 @@
-# Prompt 0003: Add Basic ASCII Game Loop with WASD Movement
-# Create the simplest possible game loop in Python that runs in the terminal and redraws a small ASCII map on every iteration.
-# The player should be represented by '@' and should be able to move up, down, left, and right using the WASD keys.
-# Use only built-in libraries. Do not worry about real-time input or screen clearing yet — just focus on the loop and basic movement logic.
+# Prompt 0005: Add Screen Clearing and Real-Time Input to Game Loop
+# Update the basic ASCII game loop so that the screen clears on every frame and player movement works without pressing Enter.
+# Use only built-in libraries. It should work on macOS and Linux in the terminal (no GUI).
+# If necessary, use `msvcrt` only on Windows, and fallback to `termios` and `tty` elsewhere.
+
+import os
+import sys
 
 WIDTH = 10
 HEIGHT = 5
 
-# Starting player position
 player_x = 4
 player_y = 2
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def get_key():
+    try:
+        # Windows
+        import msvcrt
+        return msvcrt.getch().decode('utf-8').lower()
+    except ImportError:
+        # POSIX (macOS, Linux)
+        import termios
+        import tty
+
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(fd)
+            ch = sys.stdin.read(1)
+            return ch.lower()
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
 def draw_map():
     for y in range(HEIGHT):
         row = ''
         for x in range(WIDTH):
-            if x == player_x and y == player_y:
-                row += '@'
-            else:
-                row += '.'
+            row += '@' if x == player_x and y == player_y else '.'
         print(row)
-
-def handle_input():
-    move = input("Move (WASD): ").lower()
-    return move if move in ['w', 'a', 's', 'd'] else None
 
 def update_position(move):
     global player_x, player_y
@@ -37,11 +54,13 @@ def update_position(move):
 
 def game_loop():
     while True:
+        clear_screen()
         draw_map()
-        move = handle_input()
-        if move:
-            update_position(move)
-        print("\n" * 2)  # Add spacing between frames
+        print("Use WASD to move. Press 'q' to quit.")
+        move = get_key()
+        if move == 'q':
+            break
+        update_position(move)
 
 if __name__ == "__main__":
     game_loop()
