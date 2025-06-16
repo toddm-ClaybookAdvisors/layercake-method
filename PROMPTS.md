@@ -127,6 +127,23 @@ Replace the randomly scattered obstacles with a more structured map layout that 
 → See: game/game.py  
 → Commit: 0009 (Replace random obstacles with room-and-hallway structure)
 
+## Prompt 0010: Finalize Scrollable Viewport for Structured Map
+
+**Original Prompt:**
+
+Ok, let's do commit 0010 update game.py with our changes from the debug session and reinstate the high value comments
+
+**Instruction:**
+
+Finalize the fix for the visual clutter issue introduced in prompt 0009 by implementing the dynamic scrollable viewport used in `debug-0009-a2.py`. Update `game.py` with this logic and reinstate all high-value comments describing each major function and design decision.
+
+**Related Debugging:**
+See: [debug/debug-0009-a/README.md](debug/debug-0009-a/README.md)
+
+**Result:**
+
+→ See: game/game.py  
+→ Commit: 0010 (add scrollable viewport and restore annotated game logic)
 
 
 

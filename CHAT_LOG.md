@@ -56,6 +56,15 @@ Rooms are placed at fixed intervals, and hallways are carved between their cente
 
 Player spawning is updated to place the player at the center of the first room.
 
+## Prompt 0010: Finalize Scrollable Viewport for Structured Map
+
+The fix from debugging session `debug-0009-a2.py` has been incorporated into `game.py`. This version features a dynamic, scrollable viewport that follows the player while keeping within map bounds.
+
+The player starts in a carved room, and only the portion of the map near the player is rendered to the terminal. The full 100×100 map remains intact but is no longer drawn in full each frame, solving the original visual clutter issue.
+
+High-value comments have been restored throughout to clarify the responsibilities of each component.
+
+
 
 
 
