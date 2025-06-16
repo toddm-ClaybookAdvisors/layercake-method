@@ -6,3 +6,5 @@ Here are copy-ready instructions for installing Python 3 using Homebrew and sett
 
 Here is a minimal Python implementation of a game loop that displays a 10x5 ASCII map, allows WASD movement, and updates the player’s position on each turn. It uses `input()` to get user commands, redraws the map by printing it each frame, and uses only built-in libraries.
 
+Here's a `.gitignore` file tailored for Python development, including virtual environments, compiled files, cache directories, and VS Code-specific workspace metadata. This will keep unnecessary files out of version control.
+

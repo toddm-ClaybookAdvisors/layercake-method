@@ -42,3 +42,15 @@ Create the simplest possible game loop in Python that runs in the terminal and r
 → See: game/game.py
 → Commit: 0003 (Add basic ASCII game loop with WASD movement)
 
+## Prompt 0004: Add .gitignore for Python and VS Code
+
+**Instruction:**
+
+Create a `.gitignore` file for a Python project that includes standard Python exclusions as well as common Visual Studio Code settings and folders.
+
+**Result:**
+
+→ See: .gitignore  
+→ Commit: 0004 (Add .gitignore for Python and VS Code)
+
+
