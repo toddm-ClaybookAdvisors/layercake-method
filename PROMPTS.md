@@ -64,5 +64,16 @@ Update the basic ASCII game loop so that the screen clears on every frame and pl
 → See: game/game.py  
 → Commit: 0005 (Add screen clearing and real-time input to game loop)
 
+## Prompt 0006: Expand Game Board and Add Explanatory Comments
+
+**Instruction:**
+
+Triple the size of the game board in the existing loop and add high-quality comments to the code. With each code iteration, explain what you've changed and why.
+
+**Result:**
+
+→ See: game/game.py  
+→ Commit: 0006 (Expand game board and add explanatory comments)
+
 
 

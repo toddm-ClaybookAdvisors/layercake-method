@@ -19,5 +19,13 @@ This update enhances the game loop by:
 
 The code remains cross-platform and uses only built-in libraries.
 
+## Prompt 0006: Expand Game Board and Add Explanatory Comments
+
+The game board has been expanded from 10×5 to 30×15 to give the player more space to explore. All dimensions and boundary checks have been updated accordingly.
+
+I also added strategic, high-value comments to the code — not just explaining *what* each function does, but *why* it exists, and how it contributes to the game loop.
+
+These comments are intended to help someone new to game development understand the core structure of the loop, state management, and rendering model.
+
 
 
