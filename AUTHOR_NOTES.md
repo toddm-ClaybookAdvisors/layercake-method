@@ -8,4 +8,10 @@ After prompt 7, I told CGPT to include the original text of my prompts along wit
 *note 3*
 After prompt 10, the chat started to get slow and stupid. I just spent a bunch of time creating the transition process between chats and added an index now that I have things checked into github
 
+*note 4*
+this no editing my hand thing may have to fall by the wayside for markdown files which ChatGPT 4-o seems to have a particularly hard time with. My new chat window has already filled up its context window and is getting stupid and slow.  I'll have to transfer with the next commit.  I've been unfair.   I'm exhausted and was praising the wrong formats for markdown.  I finally got it right and CGP picked it up even though the context window is full.
+
+*note 5*
+I just had to create commit 0013 with the debug info.  I had already checked in the fixes and changes.  I'll try and append the changes, but I need to remember not to work on so little sleep.  I'll try to fix things so the index isn't all messed up.  Hopefully I can do it without touching the code.
+
 

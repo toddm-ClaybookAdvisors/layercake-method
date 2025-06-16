@@ -190,6 +190,27 @@ Move all map-generation logic into a new module: `mapgen.py`. Update `game.py` t
 → See: src/game.py  
 → Commit: 0012 (Irregular room generation, maze-like connections, modular mapgen)
 
+## Prompt 0013: Finalize Irregular Room Generation and Modular Map Architecture
+
+**Original Prompt:**
+
+Change the simple room structure to include multiple room shapes and maze like hallways between them. Include an exit.
+
+**Instruction:**
+
+Introduce irregularly shaped rooms and maze-like hallways into the game map, ensuring all rooms are accessible and connected. Add a visible exit near the edge of the playable area. Expand the usable screen space to make the layout feel open. Modularize the map generation logic by moving it into a new `mapgen.py` file.
+
+This prompt promotes the successful fix from debug session `debug-0012-a`, ensuring all bugs were resolved and the viewport adapts dynamically to terminal dimensions.
+
+**Related Debugging:**
+See: [debug/debug-0012-a/README.md](debug/debug-0012-a/README.md)
+
+**Result:**
+
+→ See: `src/game.py`, `src/mapgen.py`  
+→ Commit: 0013 (irregular rooms, maze layout, modular mapgen architecture)
+
+
 
 
 
