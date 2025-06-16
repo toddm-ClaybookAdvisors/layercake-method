@@ -95,6 +95,20 @@ Once approved, the assistant:
 
 All functionality is retained and logically separated. This commit finalizes Prompt 0012.
 
+## Prompt 0013: Finalize Irregular Room Generation and Modular Map Architecture
+
+This prompt integrates the successful outcome of debug session `debug-0012-a`. The game world now features:
+
+- Irregular room sizes and placement
+- Maze-like hallways connecting all rooms
+- A clearly marked exit positioned near the map boundary
+- Guaranteed connectivity between rooms and exit
+- A fully modular `mapgen.py` file for reusable generation logic
+- Dynamic use of terminal dimensions for map sizing and viewport control
+
+This version was tested in candidate folder `debug/debug-0012-a/a2` and confirmed to resolve all previously identified bugs. The structure now supports future features like minimaps, fog of war, or room metadata tagging.
+
+
 
 
 
