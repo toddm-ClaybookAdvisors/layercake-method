@@ -168,6 +168,29 @@ This commit also enforces ongoing project policies:
 → See: PROMPT_INDEX.md  
 → Commit: 0011 (Archive transition state and generate prompt index)
 
+## Prompt 0012: Irregular Room Generation with Reachable Exit
+
+**Original Prompt:**
+
+Change the simple room structure to include multiple room shapes and maze like hallways between them. Include an exit
+
+**Instruction:**
+
+Replace the uniform grid of rectangular rooms with a procedurally generated layout featuring:
+- Unevenly distributed rooms of different shapes and sizes
+- Maze-like hallways that connect all rooms via valid, walkable paths
+- An exit `>` placed at the far edge of the map and reachable from the player start
+- A much higher room density, filling 60–80% of the map
+
+Move all map-generation logic into a new module: `mapgen.py`. Update `game.py` to import from this module, preserving viewport, player movement, and display features.
+
+**Result:**
+
+→ See: src/mapgen.py  
+→ See: src/game.py  
+→ Commit: 0012 (Irregular room generation, maze-like connections, modular mapgen)
+
+
 
 
 

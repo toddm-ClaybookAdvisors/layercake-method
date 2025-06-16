@@ -77,6 +77,23 @@ The transition commit acts as a placeholder and continuity anchor before develop
 
 All prior state, including `PROMPTS.md`, `CHAT_LOG.md`, `src/game.py`, and `debug/`, was preserved and version-controlled.
 
+## Prompt 0012: Irregular Room Generation with Reachable Exit
+
+Todd asked for a more complex map layout with the following characteristics:
+- Irregularly shaped and unevenly distributed rooms
+- Maze-like hallways that connect them without blocking access
+- A much larger portion of the map carved out (60–80%)
+- An exit `>` placed at the far edge of the map
+
+The assistant suggested moving all generation logic into a new file (`mapgen.py`) and confirmed modular separation.
+
+Once approved, the assistant:
+- Created `mapgen.py` with a randomized room placement strategy and flood-safe carving
+- Connected rooms with twisty hallways
+- Guaranteed exit placement in a reachable location
+- Updated `game.py` to import and use the new module, preserving the scrolling renderer and movement system
+
+All functionality is retained and logically separated. This commit finalizes Prompt 0012.
 
 
 
