@@ -38,5 +38,16 @@ One very powerful aspect of coding with an LLM is its ability to look ahead base
 → See: PROMPTS.md  
 → Commit: 0007 (Suggest next steps for gameplay evolution)
 
+## Prompt 0008: Add Static Obstacles and Expand Map to 100×100
+
+The game map has been expanded from 30×15 to 100×100, giving the player significantly more navigable space and making future features (like items, enemies, and zones) much more meaningful.
+
+This version also introduces **static obstacles** (`#`), which are impassable tiles placed randomly throughout the map. These obstacles add structure and navigation challenges, laying the groundwork for gameplay mechanics like pathfinding, chokepoints, and exploration.
+
+The drawing function now renders a full 100×100 map (which may scroll fast in your terminal), and the logic for updating player position prevents movement into obstacles.
+
+High-quality comments explain each architectural component: map generation, obstacle layout, rendering, and movement handling.
+
+
 
 

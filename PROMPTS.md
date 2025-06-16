@@ -96,6 +96,21 @@ Allow saving and loading of the game world, player position, and item states to 
 
 Each of these can be layered modularly, but I recommend starting with **obstacles** for prompt 0008 — it delivers the fastest gameplay payoff with minimal complexity.
 
+## Prompt 0008: Add Static Obstacles and Expand Map to 100×100
+
+**Original Prompt:**
+
+I like suggestion #1, however, we'll need a bigger board for it to really work. Let's go to 100 x 100, or should we go bigger?
+
+**Instruction:**
+
+Implement static obstacles in the game map by adding impassable tiles (`#`) and expand the map size from 30×15 to 100×100 to give meaningful room for navigation. Consider whether an even larger map would be beneficial. Update all related logic and preserve previous functionality (movement, drawing, boundaries). Include high-quality comments and describe what changed and why.
+
+**Result:**
+
+→ See: game/game.py  
+→ Commit: 0008 (Add static obstacles and expand map to 100x100)
+
 
 
 

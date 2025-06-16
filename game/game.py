@@ -1,38 +1,52 @@
-# Prompt 0006: Expand Game Board and Add Explanatory Comments
-# Triple the size of the game board and add high-quality comments that explain the purpose and design of each function and key section.
+# Prompt 0008: Add Static Obstacles and Expand Map to 100×100
+# Adds impassable tiles ('#') and increases map dimensions to 100x100.
+# Player movement and rendering logic are updated accordingly.
+# The obstacle map is generated once at startup with fixed randomness for consistency.
 
 import os
 import sys
+import random
 
-# Game world dimensions (increased from 10x5 to 30x15)
-WIDTH = 30
-HEIGHT = 15
+WIDTH = 100
+HEIGHT = 100
+OBSTACLE_DENSITY = 0.08  # ~8% of the map will be walls
 
-# Initial player position at the center of the expanded map
+# Starting player position
 player_x = WIDTH // 2
 player_y = HEIGHT // 2
 
+# 2D array to store map tiles: '.' = floor, '#' = wall
+game_map = []
+
+def generate_map():
+    """
+    Generates a 2D map filled with floor tiles and random obstacle tiles.
+    The map is created once at startup and stored globally.
+    """
+    global game_map
+    random.seed(42)  # Fixed seed for repeatability during testing
+    game_map = []
+    for y in range(HEIGHT):
+        row = []
+        for x in range(WIDTH):
+            if random.random() < OBSTACLE_DENSITY:
+                row.append('#')
+            else:
+                row.append('.')
+        game_map.append(row)
+
 def clear_screen():
-    """
-    Clears the terminal screen.
-    Uses 'cls' for Windows and 'clear' for POSIX systems.
-    Called every frame to redraw the screen from scratch.
-    """
+    """Clears the terminal screen using the appropriate command for the OS."""
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def get_key():
-    """
-    Reads a single key press from the user without requiring Enter.
-    Uses msvcrt for Windows and termios/tty for macOS/Linux.
-    Returns the lowercase character pressed.
-    """
+    """Reads a single key press without requiring Enter. Cross-platform."""
     try:
         import msvcrt
         return msvcrt.getch().decode('utf-8').lower()
     except ImportError:
         import termios
         import tty
-
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
         try:
@@ -44,9 +58,8 @@ def get_key():
 
 def draw_map():
     """
-    Draws the entire game world.
-    Prints a grid of WIDTH x HEIGHT, placing '@' at the player's current position,
-    and '.' everywhere else.
+    Draws the entire 100x100 map.
+    The player's character '@' is drawn on top of the map tile at their location.
     """
     for y in range(HEIGHT):
         row = ''
@@ -54,39 +67,44 @@ def draw_map():
             if x == player_x and y == player_y:
                 row += '@'
             else:
-                row += '.'
+                row += game_map[y][x]
         print(row)
 
 def update_position(move):
     """
-    Updates the player's position based on the input key.
-    Enforces world boundaries so the player cannot move off the map.
+    Updates the player’s position if the destination is not a wall and within bounds.
     """
     global player_x, player_y
-    if move == 'w' and player_y > 0:
-        player_y -= 1
-    elif move == 's' and player_y < HEIGHT - 1:
-        player_y += 1
-    elif move == 'a' and player_x > 0:
-        player_x -= 1
-    elif move == 'd' and player_x < WIDTH - 1:
-        player_x += 1
+    new_x, new_y = player_x, player_y
+
+    if move == 'w':
+        new_y -= 1
+    elif move == 's':
+        new_y += 1
+    elif move == 'a':
+        new_x -= 1
+    elif move == 'd':
+        new_x += 1
+
+    # Ensure the new position is inside the map and not an obstacle
+    if 0 <= new_x < WIDTH and 0 <= new_y < HEIGHT:
+        if game_map[new_y][new_x] != '#':
+            player_x, player_y = new_x, new_y
 
 def game_loop():
     """
-    Main game loop.
-    Continuously clears the screen, renders the map,
-    waits for user input, and updates the player's position.
-    Loops until the user presses 'q'.
+    Main loop: clears the screen, draws the map, handles input and movement.
+    Continues until the user presses 'q'.
     """
     while True:
         clear_screen()
         draw_map()
-        print("Use WASD to move. Press 'q' to quit.")
+        print("Use WASD to move. Avoid # walls. Press 'q' to quit.")
         move = get_key()
         if move == 'q':
             break
         update_position(move)
 
 if __name__ == "__main__":
+    generate_map()
     game_loop()
