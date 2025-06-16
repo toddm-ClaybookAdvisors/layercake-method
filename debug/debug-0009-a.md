@@ -47,3 +47,17 @@ VIEW_HEIGHT = 20
 Candidate fix `debug-0009-a1.py` implements this logic.
 ```
 
+```markdown
+...
+
+**Todd:** Let's do one more test iteration. Extend the map size to the size of the terminal window and put the view window the same size but put it in the middle of the terminal window.
+
+**ai-helper:** Great — we’ll:
+- Use `shutil.get_terminal_size()` to determine `MAP_WIDTH`, `MAP_HEIGHT`
+- Set `VIEW_WIDTH` and `VIEW_HEIGHT` equal to that
+- Keep the player centered on the map
+- Render a viewport that fills the terminal entirely
+
+This test will use candidate file `debug-0009-a2.py`
+```
+
