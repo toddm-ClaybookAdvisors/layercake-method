@@ -64,6 +64,20 @@ The player starts in a carved room, and only the portion of the map near the pla
 
 High-value comments have been restored throughout to clarify the responsibilities of each component.
 
+## Prompt 0011: Archive Transition State
+
+This prompt formally archives the state of the project prior to a conversational thread reset. No code or design changes were introduced in this commit. Instead, it generated metadata necessary to continue development seamlessly in a new thread.
+
+The assistant was instructed to:
+- Create a refreshed `PROMPT_INDEX.md` linking all prior prompt commits to their Git commit hashes and corresponding entries in `CHAT_LOG.md`
+- Generate a new file `chat-transition/transfer-001.md` documenting the transfer event
+- Adhere to project policy: no emoji, maintain prompt/response/commit traceability, and capture GitHub URLs for each prompt’s commit
+
+The transition commit acts as a placeholder and continuity anchor before development resumes with Prompt 0012.
+
+All prior state, including `PROMPTS.md`, `CHAT_LOG.md`, `src/game.py`, and `debug/`, was preserved and version-controlled.
+
+
 
 
 

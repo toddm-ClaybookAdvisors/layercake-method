@@ -145,6 +145,30 @@ See: [debug/debug-0009-a/README.md](debug/debug-0009-a/README.md)
 → See: game/game.py  
 → Commit: 0010 (add scrollable viewport and restore annotated game logic)
 
+## Prompt 0011: Archive Transition State
+
+**Original Prompt:**
+
+If I give you a git clone url, and a list of commits from the git history, can you generate a table of contents that links the PROMPTS.md entry to the CHATLOG.md?
+
+**Instruction:**
+
+This prompt formally captures the state of the project prior to transitioning to a new chat thread. No changes to `game.py` or system logic were made. Instead, this commit introduces:
+
+- `PROMPT_INDEX.md` — a navigable table mapping each prompt to its Git commit and chat log anchor
+- `chat-transition/transfer-001.md` — metadata explaining the reason, timing, and structure of the conversation reset
+
+This commit also enforces ongoing project policies:
+- No emoji are used in any file, ever
+- All prompts, commits, and responses are clearly logged and versioned
+
+**Result:**
+
+→ See: chat-transition/transfer-001.md  
+→ See: PROMPT_INDEX.md  
+→ Commit: 0011 (Archive transition state and generate prompt index)
+
+
 
 
 
