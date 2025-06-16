@@ -75,5 +75,28 @@ Triple the size of the game board in the existing loop and add high-quality comm
 → See: game/game.py  
 → Commit: 0006 (Expand game board and add explanatory comments)
 
+## Prompt 0007: Suggest Next Steps for Gameplay Evolution
+
+Here are five potential next steps for evolving the game from its current state (a real-time, grid-based map with free-form movement). These are ranked based on their likely impact on gameplay depth, development momentum, and demonstrating structured game architecture.
+
+### 1. Add Static Obstacles or Walls (Rank 1)
+Introduce impassable tiles (`#`) to the map. This adds structure, pathing, and environmental interaction — critical for almost all future mechanics (like enemies or loot). It transforms the space from an open sandbox into something navigable.
+
+### 2. Implement a Bounded Camera Viewport (Rank 2)
+Instead of printing the entire 30x15 map, show only a window (e.g., 10x5) around the player. This introduces the concept of *exploration*, a key adventure game mechanic, and prepares the game for much larger maps without overwhelming the terminal.
+
+### 3. Place Interactive Items on the Map (Rank 3)
+Randomly spawn objects (`!`, `*`, `$`) that the player can pick up or trigger by moving onto them. This introduces stateful gameplay and sets the foundation for inventory systems, rewards, or power-ups.
+
+### 4. Add NPCs or Enemies (Rank 4)
+Place AI-controlled characters (`E`, `N`) on the map that move or react to the player. Even simple random movement makes the world feel alive. This opens doors to stealth, combat, or quests.
+
+### 5. Implement Game State Persistence (Rank 5)
+Allow saving and loading of the game world, player position, and item states to disk. Useful for longer games, debugging, or sharing progress. While not essential right now, this becomes powerful once more mechanics are added.
+
+Each of these can be layered modularly, but I recommend starting with **obstacles** for prompt 0008 — it delivers the fastest gameplay payoff with minimal complexity.
+
+
+
 
 

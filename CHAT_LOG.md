@@ -27,5 +27,16 @@ I also added strategic, high-value comments to the code — not just explaining 
 
 These comments are intended to help someone new to game development understand the core structure of the loop, state management, and rendering model.
 
+## Prompt 0007: Suggest Next Steps for Gameplay Evolution
+
+**Instruction:**
+
+One very powerful aspect of coding with an LLM is its ability to look ahead based on the current development direction and make strategic suggestions. Based on the current state of the game (a movable player on a large ASCII map), suggest five logical next steps to continue developing the game. Rank them in order of impact or importance to gameplay and user experience. Do not write any code.
+
+**Result:**
+
+→ See: PROMPTS.md  
+→ Commit: 0007 (Suggest next steps for gameplay evolution)
+
 
 
