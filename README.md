@@ -65,3 +65,58 @@ This project is not just about building a game. It demonstrates:
 - Git for version control
 
 The first prompt will set up the Python environment for development.
+
+
+## Python Environment Setup (macOS)
+
+Follow these steps to install Python 3 and create a development environment for the project.
+
+### 1. Install Homebrew
+
+If you don’t already have Homebrew (a macOS package manager), install it using the following command:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+### 2. Install Python 3
+
+Once Homebrew is installed, use it to install Python:
+
+```bash
+brew install python
+```
+
+Verify installation:
+
+```bash
+python3 --version
+```
+
+### 3. Create and Activate a Virtual Environment
+
+From the root of the project directory:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Your shell prompt should now begin with `(venv)` indicating the environment is active.
+
+### 4. Upgrade Pip and Track Dependencies
+
+```bash
+pip install --upgrade pip
+pip freeze > requirements.txt
+```
+
+This upgrades pip and creates a requirements file that can be used to reproduce the environment.
+
+### 5. Run the Game (Once Code Is Added)
+
+Later, when the first game loop is implemented, you can run the game like this:
+
+```bash
+python game.py
+```
