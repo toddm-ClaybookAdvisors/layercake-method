@@ -30,3 +30,15 @@ Create instructions for setting up a Python 3 virtual environment on macOS that 
 
 → See: README.md  
 → Commit: 0002 (Add Python environment setup instructions for macOS)
+
+## Prompt 0003: Add Basic ASCII Game Loop with WASD Movement
+
+**Instruction:**
+
+Create the simplest possible game loop in Python that runs in the terminal and redraws a small ASCII map on every iteration. The player should be represented by `@` and should be able to move up, down, left, and right using the WASD keys. Use only built-in libraries. Do not worry about real-time input or screen clearing yet — just focus on the loop and basic movement logic.
+
+**Result:**
+
+→ See: game/game.py
+→ Commit: 0003 (Add basic ASCII game loop with WASD movement)
+
