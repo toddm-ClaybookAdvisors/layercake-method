@@ -1,0 +1,1 @@
+Here's the initial README that defines the scope, methodology, and file structure of this project. It reflects your choice to use Git commit messages and a running `PROMPTS.md` as the primary tracking method.
