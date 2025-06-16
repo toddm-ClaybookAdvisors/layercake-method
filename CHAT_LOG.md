@@ -48,6 +48,14 @@ The drawing function now renders a full 100×100 map (which may scroll fast in y
 
 High-quality comments explain each architectural component: map generation, obstacle layout, rendering, and movement handling.
 
+## Prompt 0009: Replace Random Obstacles with Room-and-Hallway Structure
+
+The map generation logic has been replaced with a simple procedural system that creates rectangular rooms connected by horizontal and vertical hallways. This eliminates the visual noise caused by randomly scattered obstacles and introduces a more meaningful game space that mimics dungeon-like layouts.
+
+Rooms are placed at fixed intervals, and hallways are carved between their centers. This structure will serve as the foundation for more advanced features like item placement, enemies, or triggers that rely on distinct areas.
+
+Player spawning is updated to place the player at the center of the first room.
+
 
 
 

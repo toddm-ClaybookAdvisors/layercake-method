@@ -112,6 +112,22 @@ Implement static obstacles in the game map by adding impassable tiles (`#`) and 
 → Commit: 0008 (Add static obstacles and expand map to 100x100)
 
 
+## Prompt 0009: Replace Random Obstacles with Room-and-Hallway Structure
+
+**Original Prompt:**
+
+the obstacles make the screen really busy. give them more structure, like rooms and hallways
+
+**Instruction:**
+
+Replace the randomly scattered obstacles with a more structured map layout that resembles rooms and hallways. Maintain the 100×100 dimensions, but generate navigable spaces with connected rectangular rooms separated by walls, using simple procedural generation. Preserve movement and boundary logic, and include explanatory comments to describe how the map is constructed.
+
+**Result:**
+
+→ See: game/game.py  
+→ Commit: 0009 (Replace random obstacles with room-and-hallway structure)
+
+
 
 
 
