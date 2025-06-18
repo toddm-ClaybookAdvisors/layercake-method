@@ -12,3 +12,6 @@
 | 0008      | Add static obstacles and expand map to 100×100            | 6237a64   | [View Commit](https://github.com/toddm-ClaybookAdvisors/layercake-method/commit/6237a64)     | [CHAT_LOG.md → 0008](#prompt-0008) |
 | 0009      | Replace random obstacles with room/hallway structure      | 12f89ea   | [View Commit](https://github.com/toddm-ClaybookAdvisors/layercake-method/commit/12f89ea)     | [CHAT_LOG.md → 0009](#prompt-0009) |
 | 0010      | Add scrollable viewport and restore game logic            | e714838   | [View Commit](https://github.com/toddm-ClaybookAdvisors/layercake-method/commit/e714838)     | [CHAT_LOG.md → 0010](#prompt-0010) |
+| 0011      | Archive transition state and generate prompt index        | b5e7d29   | [View Commit](https://github.com/toddm-ClaybookAdvisors/layercake-method/commit/b5e7d29)     | [CHAT_LOG.md → 0011](#prompt-0011) |
+| 0012      | Irregular room generation and modular mapgen              | e04a6a0   | [View Commit](https://github.com/toddm-ClaybookAdvisors/layercake-method/commit/e04a6a0)     | [CHAT_LOG.md → 0012](#prompt-0012) |
+| 0013      | Fix mapgen integration and finalize modular layout        | 897773d   | [View Commit](https://github.com/toddm-ClaybookAdvisors/layercake-method/commit/897773d)     | [CHAT_LOG.md → 0013](#prompt-0013) |
