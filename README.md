@@ -21,6 +21,31 @@ This creates a clear, traceable evolution of the project from zero to a playable
 
 ---
 
+## Project Context Boot
+
+To fully restore context for this project, use the following files:
+
+- [project-snapshot.md](./project-snapshot.md)
+- [transition-001.md](./chat-transition/transition-001.md)
+- [transition-002.md](./chat-transition/transition-002.md)
+
+In any new thread, say:
+
+> Use the project files above to reinitialize context. Assume `record` mode. No emoji. Follow all documented rules.
+
+---
+
+## Debugging Protocol
+
+When bugs are encountered, the assistant enters a structured debug mode using isolated subdirectories (e.g., `debug-0012-a/a1/`) to safely test fixes.
+
+- Each debug session is logged in a dedicated `README.md` under its debug path
+- Final fixes are promoted to the mainline after validation
+- Commit messages for debug fixes always begin with `fix:`
+
+---
+
+
 ## Prompt Tracking
 
 Prompt and result pairs are tracked using Git commit history and a single file named `PROMPTS.md`.
@@ -33,18 +58,31 @@ This avoids the need for managing dozens of small files while maintaining a full
 
 ---
 
-## Project Structure
+## Directory Structure
 
 ```
-├── AUTHOR_NOTES.md     # Personal commentary and meta-level insights
-├── CHAT_LOG.md         # Chat-style conversation history with the LLM
-├── PROMPTS.md          # All prompts, rewritten instructions, and results
-├── README.md           # This file
-├── debug/              # Structured debugging sessions
-│   └── debug-0009-a/   # Debug log and test files for Prompt 0009
-├── src/                # Source code directory
-    └── game.py         # Latest generated version of the game
+game-example/
+├── src/                     # Live application code
+│   ├── game.py
+│   └── mapgen.py
+│
+├── debug/                   # Isolated fix branches for debugging sessions
+│   └── debug-XXXX-a/
+│       ├── a1/
+│       ├── a2/
+│       └── README.md        # Full transcript and fix summary
+│
+├── chat-transition/         # Logs transitions between chat threads
+│   ├── transition-001.md
+│   └── transition-002.md    # Latest session boundary
+│
+├── PROMPTS.md               # Each prompt with clean instruction + result
+├── CHAT_LOG.md              # Chronological log of recorded interactions
+├── PROMPT_INDEX.md          # Prompt-to-commit index with links
+├── AUTHOR_NOTES.md          # Optional human notes
+└── README.md                # (This file)
 ```
+
 
 ---
 

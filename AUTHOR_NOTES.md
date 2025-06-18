@@ -14,4 +14,6 @@ this no editing my hand thing may have to fall by the wayside for markdown files
 *note 5*
 I just had to create commit 0013 with the debug info.  I had already checked in the fixes and changes.  I'll try and append the changes, but I need to remember not to work on so little sleep.  I'll try to fix things so the index isn't all messed up.  Hopefully I can do it without touching the code.
 
+*note 6*
+It took me way too long to come up to speed with the process.  I need to figure out a way speed up coming back after a few days, weeks.   One thing that was a pain was finding the correct chat.  I guess I could delete the old ones...   Also just tried to create a patch and 4o is shit at creating patch files.  I'll see what happens under 4.1
 

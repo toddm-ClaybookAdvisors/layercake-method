@@ -211,6 +211,22 @@ See: [debug/debug-0012-a/README.md](debug/debug-0012-a/README.md)
 → Commit: 0013 (irregular rooms, maze layout, modular mapgen architecture)
 
 
+## Prompt 0014: Transition to New Chat Thread (transfer-002)
+
+**Original Prompt:**
+
+ok, let's do the next commit. It is a transition commit since this chat is getting slow.
+
+**Instruction:**
+
+Document the transition to a new chat thread for performance reasons. Preserve the full development state and update `chat-transition/transfer-002.md` with a project snapshot, current status, and all standards. Include updated directory structure and `README.md` entry to reflect the new context boundary.
+
+**Result:**
+
+→ See: chat-transition/transfer-002.md  
+→ Commit: 0014 (document chat thread transition in transfer-002)
+
+
 
 
 

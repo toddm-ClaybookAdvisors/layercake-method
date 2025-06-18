@@ -108,6 +108,17 @@ This prompt integrates the successful outcome of debug session `debug-0012-a`. T
 
 This version was tested in candidate folder `debug/debug-0012-a/a2` and confirmed to resolve all previously identified bugs. The structure now supports future features like minimaps, fog of war, or room metadata tagging.
 
+## Prompt 0014: Transition to New Chat Thread (transition-002)
+
+This prompt marks the reset of the conversation thread due to slowdown. The assistant preserved all architectural, procedural, and stylistic conventions established to date and documented them in `chat-transition/transition-002.md`.
+
+Changes included:
+- Finalized debug session documentation for Prompt 0012
+- Promotion of working fix in Prompt 0013
+- New formatting and commit policies for debug sessions
+- Updated `PROMPT_INDEX.md` with entries through Prompt 0013
+- Regenerated `README.md` with latest directory structure
+- Locked in naming standards and ASCII-only requirement for all future markdown files
 
 
 
