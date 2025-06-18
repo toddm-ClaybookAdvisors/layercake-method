@@ -120,6 +120,20 @@ Changes included:
 - Regenerated `README.md` with latest directory structure
 - Locked in naming standards and ASCII-only requirement for all future markdown files
 
+## Prompt 0015: Refactor mapgen.py and game.py for clarity, structure, and performance
+
+**Instruction:**
+Refactor both `mapgen.py` and `game.py` for clarity, structure, and performance using GPT-4.1. Improve modularity, docstrings, high-value comments, and overall maintainability while preserving gameplay and UX.
+
+**Result:**
+Both files were refactored for modularity, clarity, and maintainability.  
+Major functional changes:
+- Input now requires pressing RETURN for each move
+- Viewport size is now fixed, not dynamic
+
+[sidebar]  
+All follow-up dialog for this prompt occurred in sidebar and is not included in the official log.
+
 
 
 
