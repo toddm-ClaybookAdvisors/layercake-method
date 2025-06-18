@@ -60,7 +60,7 @@ def generate_map(width, height, room_min=4, room_max=8, max_rooms=10, seed=None)
     exit_pos = _find_exit(rooms, player_start)
 
     # Mark player and exit
-    _mark_cell(grid, player_start, '@')
+    #_mark_cell(grid, player_start, '@')
     _mark_cell(grid, exit_pos, '>')
     return grid, player_start, exit_pos
 

@@ -3,41 +3,78 @@ game.py
 
 Main game loop and interface for the LLM-driven 2D adventure game.
 
-Responsibilities:
-    - Handles player input and movement
-    - Maintains game state (player, map, messages)
-    - Renders the visible portion of the map (scrollable viewport)
-    - Processes win condition (player reaches exit)
-    - Delegates map generation to mapgen.py
-
-All major operations are modularized for clarity and easy extension.
+- Reads map/viewport size from config.json (project root)
+- Viewport is always a window into a much larger map (default 100x100)
+- Real-time, single-key movement (no ENTER required)
+- Overlay in upper-left corner: version 0.<next commit>   FPS: <current_fps>
+- Dynamic version number (from PROMPTS.md + 1)
 """
 
-import sys
 import os
+import sys
+import time
+import re
+import json
 from mapgen import generate_map
 
-# --- Configurable Settings ---
-MAP_WIDTH = 40
-MAP_HEIGHT = 20
-VIEWPORT_WIDTH = 20
-VIEWPORT_HEIGHT = 10
+if os.name == "nt":
+    import msvcrt
+else:
+    import termios
+    import tty
 
-# --- Game State Classes ---
+# --- Configuration Loading ---
+
+def load_config():
+    """Loads configuration from ../config.json, falling back to defaults."""
+    default = {
+        "map_width": 100,
+        "map_height": 100,
+        "viewport_width": 40,
+        "viewport_height": 20
+    }
+    config_path = os.path.join(os.path.dirname(__file__), "../config.json")
+    try:
+        with open(config_path) as f:
+            user_config = json.load(f)
+        for k in default:
+            if k not in user_config:
+                user_config[k] = default[k]
+        return user_config
+    except Exception:
+        return default
+
+CONFIG = load_config()
+MAP_WIDTH = CONFIG["map_width"]
+MAP_HEIGHT = CONFIG["map_height"]
+VIEWPORT_WIDTH = CONFIG["viewport_width"]
+VIEWPORT_HEIGHT = CONFIG["viewport_height"]
+
+# --- Dynamic Version ---
+
+def _get_version():
+    path = os.path.join(os.path.dirname(__file__), "../PROMPTS.md")
+    try:
+        with open(path) as f:
+            text = f.read()
+        matches = re.findall(r'## Prompt (\d+):', text)
+        if matches:
+            latest = max(int(n) for n in matches)
+            return f"version 0.{latest + 1}"
+    except Exception:
+        pass
+    return "version unknown"
+
+VERSION = _get_version()
+
+# --- Player and Game Classes ---
 
 class Player:
-    """
-    Tracks player position and supports movement validation.
-    """
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
     def move(self, dx, dy, game_map):
-        """
-        Attempt to move the player by (dx, dy).
-        Only allows movement into open tiles ('.', '>').
-        """
         nx, ny = self.x + dx, self.y + dy
         if _is_open_tile(game_map, nx, ny):
             self.x, self.y = nx, ny
@@ -45,9 +82,6 @@ class Player:
         return False
 
 class Game:
-    """
-    Encapsulates the entire game state and main loop.
-    """
     def __init__(self, map_width, map_height, viewport_width, viewport_height):
         self.map, (px, py), self.exit_pos = generate_map(map_width, map_height)
         self.player = Player(px, py)
@@ -55,49 +89,66 @@ class Game:
         self.viewport_width = viewport_width
         self.viewport_height = viewport_height
         self.running = True
+        self.last_frame_time = time.time()
+        self.fps = 0.0
 
     def run(self):
-        """
-        Main game loop: renders, processes input, and checks win condition.
-        """
         while self.running:
+            frame_start = time.time()
             self._render()
-            command = input("Move (WASD or Q to quit): ").strip().lower()
+            command = _getch()
             self._handle_input(command)
             if (self.player.x, self.player.y) == self.exit_pos:
                 self._add_message("You found the exit! Congratulations!")
-                self._render()
+                self._render(final=True)
                 break
+            frame_end = time.time()
+            self._update_fps(frame_end - frame_start)
 
-    def _render(self):
-        """
-        Renders the visible portion of the map, player, and messages.
-        """
+    def _update_fps(self, frame_duration):
+        if frame_duration > 0:
+            self.fps = 1.0 / frame_duration
+        else:
+            self.fps = 0.0
+
+    def _render(self, final=False):
         os.system("cls" if os.name == "nt" else "clear")
+
+        term_w, term_h = _get_terminal_size()
+        vp_w = self.viewport_width
+        vp_h = self.viewport_height
+        offset_x = max((term_w - vp_w) // 2, 0)
+        offset_y = max((term_h - vp_h) // 2, 0)
+
         viewport = _get_viewport(
-            self.map, self.player.x, self.player.y,
-            self.viewport_width, self.viewport_height
+            self.map, self.player.x, self.player.y, vp_w, vp_h
         )
+
+        overlay = f"{VERSION}   FPS: {int(self.fps)}"
+        print(overlay.ljust(term_w)[:term_w])
+
+        for _ in range(offset_y):
+            print()
+
         for row in viewport:
-            print("".join(row))
-        print(f"Position: ({self.player.x},{self.player.y})  |  Exit: {self.exit_pos}")
-        if self.messages:
-            print("\n".join(self.messages[-3:]))  # Show last 3 messages
+            line = "".join(row)
+            print(" " * offset_x + line)
+
+        if self.messages or final:
+            print()
+            print("\n".join(self.messages[-3:]))
 
     def _handle_input(self, command):
-        """
-        Handles player input, dispatching to the appropriate action.
-        """
         dx, dy = 0, 0
-        if command == "w":
+        if command in ("w", "W"):
             dy = -1
-        elif command == "s":
+        elif command in ("s", "S"):
             dy = 1
-        elif command == "a":
+        elif command in ("a", "A"):
             dx = -1
-        elif command == "d":
+        elif command in ("d", "D"):
             dx = 1
-        elif command == "q":
+        elif command in ("q", "Q"):
             self.running = False
             print("Goodbye!")
             return
@@ -109,48 +160,61 @@ class Game:
             self._add_message("You can't walk there.")
 
     def _add_message(self, msg):
-        """
-        Adds a status message for display.
-        """
         self.messages.append(msg)
 
 # --- Core Helpers ---
 
 def _is_open_tile(game_map, x, y):
-    """
-    Returns True if (x, y) is within map bounds and walkable ('.' or '>').
-    """
     if 0 <= y < len(game_map) and 0 <= x < len(game_map[0]):
         return game_map[y][x] in ('.', '>')
     return False
 
 def _get_viewport(game_map, px, py, vw, vh):
-    """
-    Returns a 2D list representing the visible viewport centered on (px, py),
-    clamped to the map edges.
-    The player '@' is rendered on top of the base map.
-    """
     rows, cols = len(game_map), len(game_map[0])
-    # Center viewport on player
     left = max(0, min(px - vw // 2, cols - vw))
     top = max(0, min(py - vh // 2, rows - vh))
     right = left + vw
     bottom = top + vh
-
-    # Deep copy map region
     view = [list(row[left:right]) for row in game_map[top:bottom]]
-    # Place player marker (clamped to viewport)
     vx, vy = px - left, py - top
     if 0 <= vy < len(view) and 0 <= vx < len(view[0]):
         view[vy][vx] = '@'
     return view
 
+def _get_terminal_size():
+    try:
+        if os.name == 'nt':
+            from shutil import get_terminal_size as gts
+            size = gts()
+            return size.columns, size.lines
+        else:
+            import fcntl, termios, struct
+            h, w, _, _ = struct.unpack('HHHH',
+                fcntl.ioctl(0, termios.TIOCGWINSZ, struct.pack('HHHH', 0, 0, 0, 0)))
+            return w, h
+    except Exception:
+        return 80, 24
+
+def _getch():
+    if os.name == "nt":
+        ch = msvcrt.getch()
+        try:
+            return ch.decode("utf-8")
+        except Exception:
+            return ""
+    else:
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(fd)
+            ch = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
+
 # --- Entry Point ---
 
 def main():
-    """
-    Initializes and starts the game.
-    """
     game = Game(MAP_WIDTH, MAP_HEIGHT, VIEWPORT_WIDTH, VIEWPORT_HEIGHT)
     game.run()
 

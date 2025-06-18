@@ -135,6 +135,18 @@ Major functional changes:
 All follow-up dialog for this prompt occurred in sidebar and is not included in the official log.
 
 
+## Prompt 0016: Config-driven map and viewport, dynamic version, persistent large map
+
+**Instruction:**
+Implement a persistent large map (100x100 by default), with a smaller, centered viewport window (default 40x20), all configurable via a new `config.json` in the project root. Update `game.py` to load map and viewport size from this config file at runtime. Ensure the version string remains dynamic, parsed from PROMPTS.md (+1), and visible in the upper left along with real-time FPS.
+
+**Result:**
+Added support for loading map/viewport size from `config.json`, dynamic version parsing, and ensured the viewport always shows a window into a large persistent map.
+
+[sidebar]  
+All further dialog for this prompt occurred in sidebar and is not included in the official log.
+
+
 
 
 

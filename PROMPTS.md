@@ -283,6 +283,26 @@ Both files were refactored for modularity, clarity, and maintainability:
 → See: src/mapgen.py, src/game.py  
 → Commit: 0015 (refactor: modularize and clarify mapgen and game logic)
 
+## Prompt 0016
+
+**Original Prompt:**
+My intention was for the view port to be a view into a much larger map underneath, can you do that?
+
+**Instruction:**
+Implement a persistent large map (100x100 by default), with a smaller, centered viewport window (default 40x20), all configurable via a new `config.json` in the project root. Update `game.py` to load map and viewport size from this config file at runtime. Ensure the version string remains dynamic, parsed from PROMPTS.md (+1), and visible in the upper left along with real-time FPS. Do not log PROMPTS.md, CHAT_LOG.md, or the commit line until instructed.
+
+**Result:**
+- Created `config.json` in the project root (supports `map_width`, `map_height`, `viewport_width`, `viewport_height`)
+- `game.py` now loads all sizing from config at startup
+- The visible game area is always a viewport window onto a persistent large map (default 100x100)
+- Version string is dynamically parsed from PROMPTS.md and incremented for "work-in-progress" state
+- FPS and version are shown in the upper left; input, movement, and all other logic unchanged
+- Future viewport or map size changes only require editing config.json
+
+→ See: src/game.py, config.json  
+→ Commit: 0016 (config-driven map and viewport, dynamic version, persistent large map)
+
+
 
 
 
