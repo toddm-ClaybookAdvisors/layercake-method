@@ -17,3 +17,6 @@ I just had to create commit 0013 with the debug info.  I had already checked in 
 *note 6*
 It took me way too long to come up to speed with the process.  I need to figure out a way speed up coming back after a few days, weeks.   One thing that was a pain was finding the correct chat.  I guess I could delete the old ones...   Also just tried to create a patch and 4o is shit at creating patch files.  I'll see what happens under 4.1
 
+*note 7* 
+switching to 4.1 is interesting.  The code is wayyyyy better, but the ability to follow instructions is pretty bad.  It made unasked for improvements, but they were cool.  Getting it to follow my output formats was difficult.
+
