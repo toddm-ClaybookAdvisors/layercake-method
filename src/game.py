@@ -1,13 +1,8 @@
 """
 game.py
 
-Main game loop and interface for the LLM-driven 2D adventure game.
-
-- Reads map/viewport size from config.json (project root)
-- Viewport is always a window into a much larger map (default 100x100)
-- Real-time, single-key movement (no ENTER required)
-- Overlay in upper-left corner: version 0.<next commit>   FPS: <current_fps>
-- Dynamic version number (from PROMPTS.md + 1)
+Adds persistent fog of war: every map tile seen by the player (ever in the viewport) remains visible.
+Unexplored tiles appear blank.
 """
 
 import os
@@ -26,7 +21,6 @@ else:
 # --- Configuration Loading ---
 
 def load_config():
-    """Loads configuration from ../config.json, falling back to defaults."""
     default = {
         "map_width": 100,
         "map_height": 100,
@@ -50,8 +44,6 @@ MAP_HEIGHT = CONFIG["map_height"]
 VIEWPORT_WIDTH = CONFIG["viewport_width"]
 VIEWPORT_HEIGHT = CONFIG["viewport_height"]
 
-# --- Dynamic Version ---
-
 def _get_version():
     path = os.path.join(os.path.dirname(__file__), "../PROMPTS.md")
     try:
@@ -66,8 +58,6 @@ def _get_version():
     return "version unknown"
 
 VERSION = _get_version()
-
-# --- Player and Game Classes ---
 
 class Player:
     def __init__(self, x, y):
@@ -92,12 +82,17 @@ class Game:
         self.last_frame_time = time.time()
         self.fps = 0.0
 
+        # FOG OF WAR: tracks which tiles have been seen
+        self.seen = [[False for _ in range(map_width)] for _ in range(map_height)]
+        self._reveal_viewport()  # Reveal initial viewport
+
     def run(self):
         while self.running:
             frame_start = time.time()
             self._render()
             command = _getch()
             self._handle_input(command)
+            self._reveal_viewport()  # Update fog after move
             if (self.player.x, self.player.y) == self.exit_pos:
                 self._add_message("You found the exit! Congratulations!")
                 self._render(final=True)
@@ -111,6 +106,19 @@ class Game:
         else:
             self.fps = 0.0
 
+    def _reveal_viewport(self):
+        """Mark all tiles currently in the viewport as seen."""
+        px, py = self.player.x, self.player.y
+        vw, vh = self.viewport_width, self.viewport_height
+        rows, cols = len(self.map), len(self.map[0])
+        left = max(0, min(px - vw // 2, cols - vw))
+        top = max(0, min(py - vh // 2, rows - vh))
+        right = left + vw
+        bottom = top + vh
+        for y in range(top, min(bottom, rows)):
+            for x in range(left, min(right, cols)):
+                self.seen[y][x] = True
+
     def _render(self, final=False):
         os.system("cls" if os.name == "nt" else "clear")
 
@@ -120,23 +128,47 @@ class Game:
         offset_x = max((term_w - vp_w) // 2, 0)
         offset_y = max((term_h - vp_h) // 2, 0)
 
-        viewport = _get_viewport(
-            self.map, self.player.x, self.player.y, vp_w, vp_h
-        )
-
+        # Overlay
         overlay = f"{VERSION}   FPS: {int(self.fps)}"
         print(overlay.ljust(term_w)[:term_w])
 
         for _ in range(offset_y):
             print()
 
+        # Draw persistent fog of war (full map, but only seen tiles or viewport)
+        viewport = self._get_fog_viewport()
+
         for row in viewport:
-            line = "".join(row)
-            print(" " * offset_x + line)
+            print(" " * offset_x + "".join(row))
 
         if self.messages or final:
             print()
             print("\n".join(self.messages[-3:]))
+
+    def _get_fog_viewport(self):
+        """Return the current viewport, showing seen tiles or blank for unseen."""
+        px, py = self.player.x, self.player.y
+        vw, vh = self.viewport_width, self.viewport_height
+        rows, cols = len(self.map), len(self.map[0])
+        left = max(0, min(px - vw // 2, cols - vw))
+        top = max(0, min(py - vh // 2, rows - vh))
+        right = left + vw
+        bottom = top + vh
+
+        out = []
+        for y in range(top, min(bottom, rows)):
+            line = []
+            for x in range(left, min(right, cols)):
+                if self.seen[y][x]:
+                    # Show player if this is their position
+                    if (x, y) == (self.player.x, self.player.y):
+                        line.append('@')
+                    else:
+                        line.append(self.map[y][x])
+                else:
+                    line.append(' ')
+            out.append(line)
+        return out
 
     def _handle_input(self, command):
         dx, dy = 0, 0
@@ -169,18 +201,6 @@ def _is_open_tile(game_map, x, y):
         return game_map[y][x] in ('.', '>')
     return False
 
-def _get_viewport(game_map, px, py, vw, vh):
-    rows, cols = len(game_map), len(game_map[0])
-    left = max(0, min(px - vw // 2, cols - vw))
-    top = max(0, min(py - vh // 2, rows - vh))
-    right = left + vw
-    bottom = top + vh
-    view = [list(row[left:right]) for row in game_map[top:bottom]]
-    vx, vy = px - left, py - top
-    if 0 <= vy < len(view) and 0 <= vx < len(view[0]):
-        view[vy][vx] = '@'
-    return view
-
 def _get_terminal_size():
     try:
         if os.name == 'nt':
@@ -211,8 +231,6 @@ def _getch():
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         return ch
-
-# --- Entry Point ---
 
 def main():
     game = Game(MAP_WIDTH, MAP_HEIGHT, VIEWPORT_WIDTH, VIEWPORT_HEIGHT)
