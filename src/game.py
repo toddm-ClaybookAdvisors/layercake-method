@@ -1,9 +1,7 @@
 """
 game.py
 
-Final version: 300x300 map, dynamic viewport sized to terminal, persistent fog-of-war (trail), radius-2 visibility, version/tick on top, movement/messages on bottom.
-
-Viewport: the portion of the map (if larger than the viewport) that is rendered at any given time, scrolling as needed.
+Final: Status bar always visible, map viewport fits terminal, bottom lines never scroll.
 """
 
 import os
@@ -87,9 +85,12 @@ class Game:
 
     def _get_dynamic_viewport_size(self):
         term_w, term_h = _get_terminal_size()
-        reserved_rows = 2  # 1 for top bar, 1 for message line
+        reserved_top = 1         # Status bar
+        reserved_bottom = 3      # Controls and two messages
+        reserved_input = 1       # Leave the last line free for user input
+        available_h = max(term_h - reserved_top - reserved_bottom - reserved_input, 1)
         vp_w = min(term_w, len(self.map[0]))
-        vp_h = min(term_h - reserved_rows, len(self.map))
+        vp_h = min(available_h, len(self.map))
         return vp_w, vp_h
 
     def run(self):
@@ -126,11 +127,10 @@ class Game:
     def _render(self, final=False):
         os.system("cls" if os.name == "nt" else "clear")
 
-        # Top bar: version and tick
         overlay = f"{VERSION}   Tick: {self.tick}   FPS: {int(self.fps)}"
         print(overlay)
 
-        # Determine viewport center (player) and bounds
+        # Compute viewport bounds
         px, py = self.player.x, self.player.y
         vw, vh = self.viewport_width, self.viewport_height
         rows, cols = len(self.map), len(self.map[0])
@@ -139,7 +139,7 @@ class Game:
         right = left + vw
         bottom = top + vh
 
-        # Draw viewport region
+        # Print only as many rows as will fit
         for y in range(top, min(bottom, rows)):
             line = []
             for x in range(left, min(right, cols)):
@@ -151,13 +151,13 @@ class Game:
                     line.append(' ')
             print("".join(line))
 
-        # Bottom: movement controls + last 2 messages
-        print()
-        controls = "Controls: W/A/S/D = move   Q = quit"
-        print(controls)
-        if self.messages or final:
-            for msg in self.messages[-2:]:
-                print(msg)
+        # Always print three lines at the bottom
+        print("Controls: W/A/S/D = move   Q = quit")
+        recent_msgs = self.messages[-2:] if self.messages or final else []
+        for msg in recent_msgs:
+            print(msg)
+        for _ in range(2 - len(recent_msgs)):
+            print()
 
     def _handle_input(self, command):
         dx, dy = 0, 0
