@@ -148,29 +148,29 @@ All further dialog for this prompt occurred in sidebar and is not included in th
 
 ## Prompt 0017
 
-**Original Prompt:**
-Ok, we're ready for our next feature.  We're going to add an "adversary".  there are no goals or intelligence yet, but the adversary is red and shows up on the map with its own view window.  We will also introduce a tick system that will be used later to move the adversary when the player moves
-
 **Instruction:**
 Implement persistent fog-of-war and player trail in a large (300x300) map with a dynamic viewport that always fits within the terminal. The viewport is defined as the portion of the map, scrolling with the player, that is rendered at any given time, regardless of fog. Always reserve one line for the top status bar, three lines for controls/messages at the bottom, and one line for user input; never print more lines than fit in the terminal. All output remains on screen without scrolling.
 
-**Prompt Evolution:**
-- **Initial intent:** Add an adversary with its own viewport and tick system.
-- **Changed feature:** Pivoted to adding fog of war, making explored tiles permanently visible as the player moves.
-- **Clarified:** Explored tiles remain visible as they appear in the viewport; unexplored tiles appear as they do now (blank).
-- **Further refined:** Specified that the player’s trail should persist—tiles ever seen remain visible even when outside the viewport.
-- **Final implementation:** Map is now 300x300, with dynamic viewport, persistent fog/trail, and correct status/message bar layout.
+**Result:**
+Status bar, viewport, controls, and messages are always visible. Viewport follows player, fog-of-war and trail are persistent, and no scrolling occurs.
+
+[sidebar]  
+All further dialog for this prompt occurred in sidebar and is not included in the official log.
+
+## Prompt 0018: Transition to New Chat Thread (transition-003)
+
+**Instruction:**
+Archive project state and all new conventions (devlog, prompt evolution, original prompt logging, viewport definition, etc.) in `chat-transition/transition-003.md`. Begin a new thread to maintain performance and clean context.
 
 **Result:**
-- Status bar (version, tick, FPS) is always visible at the top.
-- Controls and messages are always visible at the bottom, never scrolled off.
-- Viewport dynamically fits the terminal and scrolls with the player.
-- Fog-of-war and player trail work as intended across a 300x300 map.
-- Code now prints at most terminal height - 1 lines, reserving the last line for user input.
-- All indentation and padding issues fixed.
+Transitioned to a new chat thread for performance; conventions and project state archived in transition log.
 
-→ See: src/game.py  
-→ Commit: 0017 (fix: status bar and persistent viewport rendering for fog-of-war)
+[sidebar]  
+All further dialog occurred in sidebar and is not included in the official log.
+
+
+
+
 
 
 

@@ -328,6 +328,23 @@ Implement persistent fog-of-war and player trail in a large (300x300) map with a
 → See: src/game.py  
 → Commit: 0017 (fix: status bar and persistent viewport rendering for fog-of-war)
 
+## Prompt 0018: Transition to New Chat Thread (transition-003)
+
+**Original Prompt:**
+you are slow now, let's do a transition
+
+**Instruction:**
+Archive project state and all new conventions (devlog, prompt evolution, original prompt logging, viewport definition, etc.) in `chat-transition/transition-003.md`. Begin a new thread to maintain performance and clean context.
+
+**Result:**
+- Documented transition and all new conventions in `chat-transition/transition-003.md`.
+- No code or design changes; state and policy only.
+- Ready for immediate context re-init and continuation in new thread.
+
+→ See: chat-transition/transition-003.md  
+→ Commit: 0018 (chore: document thread transition and new conventions)
+
+
 
 
 
