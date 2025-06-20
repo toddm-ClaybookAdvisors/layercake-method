@@ -344,6 +344,27 @@ Archive project state and all new conventions (devlog, prompt evolution, origina
 → See: chat-transition/transition-003.md  
 → Commit: 0018 (chore: document thread transition and new conventions)
 
+## Prompt 0019: Enhance dungeon with labyrinth near exit and guaranteed connectivity
+
+**Original Prompt:**  
+Make the door reachable with multiple paths, add labyrinth near door, and increase dungeon complexity with more rooms and loops.
+
+**Instruction:**  
+- Implement a maze area near the exit door with multiple corridor connections to nearby rooms.  
+- Increase number and size variation of rooms for a more dungeon-like feel.  
+- Add loops and cross corridors between rooms.  
+- Add connectivity check (BFS) to ensure exit is reachable, and fix if unreachable.  
+- Improve BFS with step limit to avoid infinite loops.
+
+**Result:**  
+Updated `mapgen.py` with recursive backtracker maze near exit, multiple corridor connections, additional loops, and BFS connectivity check with timeout.  
+Updated connectivity fix to carve corridors through midpoint for better reachability.  
+Also updated `game.py` to render the door as bold red '0' visible when on screen.
+
+**Commit:** fix: prevent infinite BFS in connectivity check and improve connectivity fix
+
+
+
 
 
 
