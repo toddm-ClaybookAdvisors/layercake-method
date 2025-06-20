@@ -1,8 +1,9 @@
 """
 game.py
 
-Persistent fog of war: all explored tiles remain visible as the player moves; unexplored areas are blank.
-Entire map is rendered. This is fully future-proofed for later minimap/viewport refactors.
+Final version: 300x300 map, dynamic viewport sized to terminal, persistent fog-of-war (trail), radius-2 visibility, version/tick on top, movement/messages on bottom.
+
+Viewport: the portion of the map (if larger than the viewport) that is rendered at any given time, scrolling as needed.
 """
 
 import os
@@ -20,10 +21,10 @@ else:
 
 def load_config():
     default = {
-        "map_width": 100,
-        "map_height": 100,
-        "viewport_width": 40,
-        "viewport_height": 20
+        "map_width": 300,
+        "map_height": 300,
+        "viewport_width": 0,
+        "viewport_height": 0
     }
     config_path = os.path.join(os.path.dirname(__file__), "../config.json")
     try:
@@ -39,8 +40,6 @@ def load_config():
 CONFIG = load_config()
 MAP_WIDTH = CONFIG["map_width"]
 MAP_HEIGHT = CONFIG["map_height"]
-VIEWPORT_WIDTH = CONFIG["viewport_width"]
-VIEWPORT_HEIGHT = CONFIG["viewport_height"]
 
 def _get_version():
     path = os.path.join(os.path.dirname(__file__), "../PROMPTS.md")
@@ -70,19 +69,28 @@ class Player:
         return False
 
 class Game:
-    def __init__(self, map_width, map_height, viewport_width, viewport_height):
+    def __init__(self, map_width, map_height):
         self.map, (px, py), self.exit_pos = generate_map(map_width, map_height)
         self.player = Player(px, py)
         self.messages = []
-        self.viewport_width = viewport_width
-        self.viewport_height = viewport_height
         self.running = True
         self.last_frame_time = time.time()
         self.fps = 0.0
+        self.tick = 0
 
         # FOG OF WAR: tracks which tiles have been seen
         self.seen = [[False for _ in range(map_width)] for _ in range(map_height)]
-        self._reveal_viewport()  # Reveal initial viewport
+        self._reveal_visible_area()  # Reveal initial vision
+
+        # Viewport size determined at runtime
+        self.viewport_width, self.viewport_height = self._get_dynamic_viewport_size()
+
+    def _get_dynamic_viewport_size(self):
+        term_w, term_h = _get_terminal_size()
+        reserved_rows = 2  # 1 for top bar, 1 for message line
+        vp_w = min(term_w, len(self.map[0]))
+        vp_h = min(term_h - reserved_rows, len(self.map))
+        return vp_w, vp_h
 
     def run(self):
         while self.running:
@@ -90,11 +98,12 @@ class Game:
             self._render()
             command = _getch()
             self._handle_input(command)
-            self._reveal_viewport()  # Update fog after move
+            self._reveal_visible_area()  # Reveal after move
             if (self.player.x, self.player.y) == self.exit_pos:
                 self._add_message("You found the exit! Congratulations!")
                 self._render(final=True)
                 break
+            self.tick += 1
             frame_end = time.time()
             self._update_fps(frame_end - frame_start)
 
@@ -104,8 +113,24 @@ class Game:
         else:
             self.fps = 0.0
 
-    def _reveal_viewport(self):
-        """Mark all tiles currently in the viewport as seen."""
+    def _reveal_visible_area(self):
+        """Mark all tiles in a radius-2 around the player as seen."""
+        px, py = self.player.x, self.player.y
+        for dy in range(-2, 3):
+            for dx in range(-2, 3):
+                x = px + dx
+                y = py + dy
+                if 0 <= y < len(self.map) and 0 <= x < len(self.map[0]):
+                    self.seen[y][x] = True
+
+    def _render(self, final=False):
+        os.system("cls" if os.name == "nt" else "clear")
+
+        # Top bar: version and tick
+        overlay = f"{VERSION}   Tick: {self.tick}   FPS: {int(self.fps)}"
+        print(overlay)
+
+        # Determine viewport center (player) and bounds
         px, py = self.player.x, self.player.y
         vw, vh = self.viewport_width, self.viewport_height
         rows, cols = len(self.map), len(self.map[0])
@@ -113,21 +138,11 @@ class Game:
         top = max(0, min(py - vh // 2, rows - vh))
         right = left + vw
         bottom = top + vh
+
+        # Draw viewport region
         for y in range(top, min(bottom, rows)):
-            for x in range(left, min(right, cols)):
-                self.seen[y][x] = True
-
-    def _render(self, final=False):
-        os.system("cls" if os.name == "nt" else "clear")
-
-        term_w, _ = _get_terminal_size()
-        overlay = f"{VERSION}   FPS: {int(self.fps)}"
-        print(overlay.ljust(term_w)[:term_w])
-
-        # Draw the entire map, showing explored tiles and player
-        for y in range(len(self.map)):
             line = []
-            for x in range(len(self.map[0])):
+            for x in range(left, min(right, cols)):
                 if (x, y) == (self.player.x, self.player.y):
                     line.append('@')
                 elif self.seen[y][x]:
@@ -136,9 +151,13 @@ class Game:
                     line.append(' ')
             print("".join(line))
 
+        # Bottom: movement controls + last 2 messages
+        print()
+        controls = "Controls: W/A/S/D = move   Q = quit"
+        print(controls)
         if self.messages or final:
-            print()
-            print("\n".join(self.messages[-3:]))
+            for msg in self.messages[-2:]:
+                print(msg)
 
     def _handle_input(self, command):
         dx, dy = 0, 0
@@ -158,7 +177,9 @@ class Game:
             self._add_message("Invalid input! Use W/A/S/D to move, Q to quit.")
             return
         moved = self.player.move(dx, dy, self.map)
-        if not moved:
+        if moved:
+            self.tick += 1
+        else:
             self._add_message("You can't walk there.")
 
     def _add_message(self, msg):
@@ -201,7 +222,7 @@ def _getch():
         return ch
 
 def main():
-    game = Game(MAP_WIDTH, MAP_HEIGHT, VIEWPORT_WIDTH, VIEWPORT_HEIGHT)
+    game = Game(MAP_WIDTH, MAP_HEIGHT)
     game.run()
 
 if __name__ == "__main__":
