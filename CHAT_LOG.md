@@ -168,6 +168,21 @@ Transitioned to a new chat thread for performance; conventions and project state
 [sidebar]  
 All further dialog occurred in sidebar and is not included in the official log.
 
+### Prompt 0019
+
+User requested a proper labyrinth near the door with multiple paths, more dungeon rooms, and guaranteed connectivity.
+
+Assistant implemented a maze carving with recursive backtracker, multiple corridor connections, and loops between rooms.
+
+Added BFS connectivity check with step limit to prevent hangs.
+
+User reported a bug where quitting then restarting caused a hang in BFS.
+
+Assistant patched BFS with max steps and improved connectivity fix carving corridors through midpoint.
+
+User confirmed the fix works and approved commit.
+
+Iteration closed successfully.
 
 
 

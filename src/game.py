@@ -17,6 +17,10 @@ else:
     import termios
     import tty
 
+# Constants for terminal colors
+COLOR_BOLD_RED = '\033[1;31m'
+COLOR_RESET = '\033[0m'
+
 def load_config():
     default = {
         "map_width": 300,
@@ -124,6 +128,18 @@ class Game:
                 if 0 <= y < len(self.map) and 0 <= x < len(self.map[0]):
                     self.seen[y][x] = True
 
+    def render_tile(self, map_x, map_y, left, top):
+        """
+        Render a single tile at map coordinates (map_x, map_y).
+        Draw door as bold red '0' if visible.
+        """
+        if (map_x, map_y) == self.exit_pos:
+            return COLOR_BOLD_RED + '0' + COLOR_RESET
+        if self.seen[map_y][map_x]:
+            return self.map[map_y][map_x]
+        else:
+            return ' '
+
     def _render(self, final=False):
         os.system("cls" if os.name == "nt" else "clear")
 
@@ -139,16 +155,13 @@ class Game:
         right = left + vw
         bottom = top + vh
 
-        # Print only as many rows as will fit
-        for y in range(top, min(bottom, rows)):
+        for y in range(top, bottom):
             line = []
-            for x in range(left, min(right, cols)):
+            for x in range(left, right):
                 if (x, y) == (self.player.x, self.player.y):
                     line.append('@')
-                elif self.seen[y][x]:
-                    line.append(self.map[y][x])
                 else:
-                    line.append(' ')
+                    line.append(self.render_tile(x, y, left, top))
             print("".join(line))
 
         # Always print three lines at the bottom
