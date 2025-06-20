@@ -1,0 +1,245 @@
+# Devlog for Commit 0017: Persistent Fog-of-War, Player Trail, and Viewport Rendering
+
+## Context
+
+**Commit:** 0017  
+**Feature:** Persistent fog-of-war with player trail, dynamic viewport rendering, and bulletproof status/messages display  
+**Date:** [Insert date of commit]
+
+---
+
+## Prompt Evolution
+
+- **Original Prompt:**  
+  Ok, we're ready for our next feature.  We're going to add an "adversary".  there are no goals or intelligence yet, but the adversary is red and shows up on the map with its own view window.  We will also introduce a tick system that will be used later to move the adversary when the player moves
+
+- **Evolution:**  
+    - Changed feature to fog-of-war/trail for explored tiles, making previously seen map areas persistently visible as the player moves.
+    - Clarified: Explored tiles remain as in the viewport; unexplored tiles as before (blank).
+    - Further refined: Player’s trail is permanent; tiles ever seen are always visible, even when outside the viewport.
+    - Final direction: Dynamic viewport fits terminal, 300x300 map, fog/trail, and bulletproof status bar + controls/messages.
+
+---
+
+## Session Transcript
+
+**Todd:**  
+Ok, we're ready for our next feature.  We're going to add an "adversary".  there are no goals or intelligence yet, but the adversary is red and shows up on the map with its own view window.  We will also introduce a tick system that will be used later to move the adversary when the player moves
+
+**ai-agent:**  
+**Feature:**  
+- **Adversary Entity:**
+  - Add an "adversary" to the game, visually distinguished by its own color (red, if terminal supports it).
+  - The adversary will appear on the map at a starting location, distinct from the player.
+  - The adversary will have its own view window on the screen (adjacent or below the player's viewport).
+
+- **Tick System:**
+  - Introduce a tick system that increments each time the player moves.
+  - The tick count will be displayed and will be used in the future for adversary movement, but for now the adversary will not move or act.
+
+- **Gameplay:**  
+  - No goals, intelligence, or adversary actions for now—this is purely infrastructure and rendering.
+
+- **All existing features (player movement, version, frame rate, config-driven sizing, etc.) remain unchanged.**
+
+Please confirm:
+- Should the adversary’s viewport be the same size as the player’s, and should it be shown **side-by-side** with the player view, or **stacked below**?
+- Should the adversary’s initial position be random, at a fixed location, or user-specified?
+- Is red color via ANSI escape codes acceptable for the adversary’s marker (will work in most terminals), with fallback to a non-red character if not supported?
+
+Once confirmed, I will implement the new feature, **but will not log PROMPTS.md or CHAT_LOG.md or commit until you say `commit`**.
+
+---
+
+**Todd:**  
+capture our back and forth as we work this out.
+
+**ai-agent:**  
+Acknowledged.  
+**From this point forward, I will capture and preserve our full back-and-forth dialogue as a running development log for this feature (Prompt 0017).**  
+When you say **commit**, I’ll include:
+- Your original initiating prompt
+- All clarifications and responses (“dev session log”)
+- The final instruction and result
+- The commit message
+
+---
+
+**Todd:**  
+let's make it a separate file that will contain our dialogue for each commit in a distinct directory and file
+
+**ai-agent:**  
+Understood!  
+From now on, for each prompt/commit, we will:
+- **Create a separate dev session log file** (e.g., `devlog-0017.md`).
+- Store it in a distinct directory (e.g., `devlog/devlog-0017.md`).
+- This file will contain the full, chronological dialogue (“back and forth”) between us for that commit—preserving all decision-making, questions, clarifications, and reasoning.
+
+---
+
+**Todd:**  
+Let's change the feature and make it simpler.  Let's add fog of war so when the player moves through the map, those parts of the map remain visible
+
+**ai-agent:**  
+**Feature:**  
+  - Add **fog of war** to the game.
+  - As the player moves through the map, any tiles they have seen remain visible on the map (even if outside the current viewport).
+  - Unexplored areas are hidden (displayed as blank or a fog character, e.g., space or `░`).
+  - Explored but currently out-of-view tiles remain visible as their underlying tile type (e.g., floor, wall, exit).
+  - The fog of war system should be efficient and persist across moves.
+
+- **All other features remain unchanged.**
+
+---
+
+**Todd:**  
+they would stay visible as though they were in the viewport
+
+**ai-agent:**  
+Perfect—so to clarify:
+- **Once a tile is seen by the player (i.e., has appeared in the viewport),**  
+  it remains permanently visible for the rest of the session—displayed just as it would if the player was currently viewing it.
+- **Unseen tiles** remain hidden (using a blank, space, or fog symbol).
+- No “soft” fog or partial/adjacent reveal: it’s **binary—seen or unseen**.
+- This is a “persistent visibility” style of fog of war.
+
+Is there a symbol you prefer for unexplored tiles? (e.g., `' '`, `'░'`, or something else)
+
+---
+
+**Todd:**  
+the same as it is now for unexplored map tiles
+
+**ai-agent:**  
+Understood.  
+- **Unexplored tiles** will appear exactly as they do now—**blank** (space).
+- **Explored tiles** (those that have ever been in the player’s viewport) will remain visible, displayed with their true map character, even if outside the viewport.
+- The fog of war is purely “binary” and permanent for each session: once seen, always visible.
+
+I’ll proceed with implementation, capturing our dialogue in `devlog/devlog-0017.md` as discussed.
+
+---
+
+**Todd:**  
+yes, let's go
+
+**ai-agent:**  
+Great. I’ll proceed:
+- Implement a **persistent fog of war**:
+    - Track which map tiles have ever been seen by the player.
+    - Render those tiles as normal, even if outside the current viewport.
+    - Unexplored tiles remain blank (space).
+- I’ll document our full design dialogue and code approach in `devlog/devlog-0017.md`.
+
+---
+
+**Todd:**  
+correct.   let's write the code
+
+**ai-agent:**  
+Here is the **code update for persistent fog of war**.  
+This includes all logic for tracking and rendering explored tiles...
+
+---
+
+**Todd:**  
+It doesn't work.   what are your theories
+
+**ai-agent:**  
+Thank you for reporting that it’s not working. Here are my top theories...
+
+---
+
+**Todd:**  
+It has the same behavior as it did before the addition of "fog of war"
+
+**ai-agent:**  
+Thank you for clarifying. If the game behaves **exactly as before**...
+
+---
+
+**Todd:**  
+we're thinking about this wrong.   I see the viewport as the area of the map that is visible to the player.   I think you're seeing it as the area of the map being rendered.   There's a slight difference.
+
+**ai-agent:**  
+Excellent distinction—and you’re right. Let’s clarify the **difference**...
+
+---
+
+**Todd:**  
+I want the player to see their trail
+
+**ai-agent:**  
+Thank you for clarifying!  
+You want **persistent exploration**—as the player moves, all map tiles they’ve ever seen...
+
+---
+
+**Todd:**  
+is this something we can change in the future if we want the map to be larger than the terminal window?
+
+**ai-agent:**  
+Absolutely—**this is completely flexible and future-proof**...
+
+---
+
+**Todd:**  
+yes
+
+**ai-agent:**  
+Acknowledged.
+
+**Here is the updated code for persistent fog of war and trail:**...
+
+---
+
+**Todd:**  
+I'm going to check the version of the file so that our misunderstanding is clear, then I'll test the new one
+
+**ai-agent:**  
+That’s a great approach—it will make our reasoning, the point of divergence, and your final test results all transparent in the devlog and version history...
+
+---
+
+**Todd:**  
+what's a good intra feature commit message?
+
+**ai-agent:**  
+A good **intra-feature commit message** should...
+
+---
+
+**Todd:**  
+interesting, we lose the version land fps line and the input / message line
+
+**ai-agent:**  
+Excellent observation—this is a direct result of switching from a **viewport-centered rendering**...
+
+---
+
+**Todd:**  
+we just make the viewport the size of the terminal, reserving space for the top (version and tick) and bottom (movement and messages).   then the player can "see" where they've been and have visibility of two tiles around it.   give me a brief version of your interpretation
+
+**ai-agent:**  
+**Interpretation (brief):**...
+
+---
+
+**Todd:**  
+to avoid that misunderstanding in the future, record what a Viewport means.   It's the portion of the map (if larger than the viewport) that is rendered at any given time whether a tile is "visible" or not. does that make sense
+
+**ai-agent:**  
+Crystal clear—and yes, that definition makes perfect sense...
+
+---
+
+**Todd:**  
+Implement the final version.   for fun, make the map 300x300 so it will definitely be larger than the viewport
+
+**ai-agent:**  
+Acknowledged.  
+Here’s what the final version will do...
+
+---
+
+**[Further dialogue includes debugging, iterating on rendering logic, line-counting, and ensuring status bar/messages are always visible. Final result is a stable, robust, and user-friendly fog-of-war implementation.]**
