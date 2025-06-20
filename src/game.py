@@ -1,8 +1,8 @@
 """
 game.py
 
-Adds persistent fog of war: every map tile seen by the player (ever in the viewport) remains visible.
-Unexplored tiles appear blank.
+Persistent fog of war: all explored tiles remain visible as the player moves; unexplored areas are blank.
+Entire map is rendered. This is fully future-proofed for later minimap/viewport refactors.
 """
 
 import os
@@ -17,8 +17,6 @@ if os.name == "nt":
 else:
     import termios
     import tty
-
-# --- Configuration Loading ---
 
 def load_config():
     default = {
@@ -122,53 +120,25 @@ class Game:
     def _render(self, final=False):
         os.system("cls" if os.name == "nt" else "clear")
 
-        term_w, term_h = _get_terminal_size()
-        vp_w = self.viewport_width
-        vp_h = self.viewport_height
-        offset_x = max((term_w - vp_w) // 2, 0)
-        offset_y = max((term_h - vp_h) // 2, 0)
-
-        # Overlay
+        term_w, _ = _get_terminal_size()
         overlay = f"{VERSION}   FPS: {int(self.fps)}"
         print(overlay.ljust(term_w)[:term_w])
 
-        for _ in range(offset_y):
-            print()
-
-        # Draw persistent fog of war (full map, but only seen tiles or viewport)
-        viewport = self._get_fog_viewport()
-
-        for row in viewport:
-            print(" " * offset_x + "".join(row))
+        # Draw the entire map, showing explored tiles and player
+        for y in range(len(self.map)):
+            line = []
+            for x in range(len(self.map[0])):
+                if (x, y) == (self.player.x, self.player.y):
+                    line.append('@')
+                elif self.seen[y][x]:
+                    line.append(self.map[y][x])
+                else:
+                    line.append(' ')
+            print("".join(line))
 
         if self.messages or final:
             print()
             print("\n".join(self.messages[-3:]))
-
-    def _get_fog_viewport(self):
-        """Return the current viewport, showing seen tiles or blank for unseen."""
-        px, py = self.player.x, self.player.y
-        vw, vh = self.viewport_width, self.viewport_height
-        rows, cols = len(self.map), len(self.map[0])
-        left = max(0, min(px - vw // 2, cols - vw))
-        top = max(0, min(py - vh // 2, rows - vh))
-        right = left + vw
-        bottom = top + vh
-
-        out = []
-        for y in range(top, min(bottom, rows)):
-            line = []
-            for x in range(left, min(right, cols)):
-                if self.seen[y][x]:
-                    # Show player if this is their position
-                    if (x, y) == (self.player.x, self.player.y):
-                        line.append('@')
-                    else:
-                        line.append(self.map[y][x])
-                else:
-                    line.append(' ')
-            out.append(line)
-        return out
 
     def _handle_input(self, command):
         dx, dy = 0, 0
@@ -193,8 +163,6 @@ class Game:
 
     def _add_message(self, msg):
         self.messages.append(msg)
-
-# --- Core Helpers ---
 
 def _is_open_tile(game_map, x, y):
     if 0 <= y < len(game_map) and 0 <= x < len(game_map[0]):
