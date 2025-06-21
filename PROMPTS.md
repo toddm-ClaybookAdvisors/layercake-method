@@ -363,6 +363,49 @@ Also updated `game.py` to render the door as bold red '0' visible when on screen
 
 **Commit:** fix: prevent infinite BFS in connectivity check and improve connectivity fix
 
+## Prompt 0020: Make the player green and leave a green trail
+
+**Original Prompt:**
+Make the player green and add have it leave a green trail behind it indicating where it has been only tiles it has passed over will be turned green.   Put any color codes in a constant that goes at the top of the file with the other color constants.
+
+**Instruction:**
+Update the game so that:
+- The player `@` is drawn in green (using a `COLOR_GREEN` constant).
+- As the player moves, each tile it has passed over is marked with a green `·`.
+- Only tiles actually stepped on by the player are marked with the green trail.
+- Color codes are stored as top-level constants in the file.
+- Fog-of-war, viewport, and status bar behavior are unchanged.
+
+**Result:**
+- The player `@` appears green in the terminal.
+- Every tile stepped on by the player permanently shows a green `·` (unless covered by the player, wall, or exit).
+- Color constants are defined at the top of `game.py`.
+- All fog-of-war and UI features work as before.
+
+→ See: src/game.py  
+→ Commit: 0020 (feat: player and trail rendered in green using COLOR_GREEN constant)
+
+## Prompt 0021: Render player as a green stick figure and display coordinates
+
+**Original Prompt:**
+Visual, Sterling would like the player to look more like a stick figure  
+before we finish this layer, one more thing. Please add the x,y coordinates to the top info bar
+
+**Instruction:**
+- Change the player symbol from green `@` to a green stick figure, using the Unicode `†` character (COLOR_GREEN).
+- Update the status/info bar at the top of the game to include the player’s coordinates as `Pos: (x, y)`.
+- All other features and conventions remain unchanged.
+
+**Result:**
+- The player is now rendered as a green `†` in the viewport.
+- The top info bar shows the player’s current position as `Pos: (x, y)`.
+- All prior features (trail, fog, status bar, etc.) are preserved.
+
+→ See: src/game.py  
+→ Commit: 0021 (feat: player is green stick figure, position added to info bar (0021))
+
+
+
 
 
 
