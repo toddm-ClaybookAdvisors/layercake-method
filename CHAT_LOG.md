@@ -184,6 +184,19 @@ User confirmed the fix works and approved commit.
 
 Iteration closed successfully.
 
+## Prompt 0020
+
+**Instruction:**
+Make the player green and have it leave a green trail behind it, indicating where it has been—only tiles it has passed over will be turned green. Place any color codes in a constant at the top of the file with the other color constants.
+
+**Result:**
+- The player `@` is drawn in green.
+- Every tile stepped on by the player is marked with a green `·` trail.
+- Only traversed tiles are marked; fog and UI are unchanged.
+- All color codes are defined as top-level constants in `game.py`.
+
+
+
 
 
 

@@ -1,7 +1,7 @@
 """
 game.py
 
-Final: Status bar always visible, map viewport fits terminal, bottom lines never scroll.
+LLM-driven 2D game demonstration — all logic, features, and refactors generated via prompt.
 """
 
 import os
@@ -17,8 +17,9 @@ else:
     import termios
     import tty
 
-# Constants for terminal colors
+# === Terminal Color Constants ===
 COLOR_BOLD_RED = '\033[1;31m'
+COLOR_GREEN = '\033[92m'
 COLOR_RESET = '\033[0m'
 
 def load_config():
@@ -84,6 +85,10 @@ class Game:
         self.seen = [[False for _ in range(map_width)] for _ in range(map_height)]
         self._reveal_visible_area()  # Reveal initial vision
 
+        # === TRAIL: track all tiles the player has ever stepped on ===
+        self.trail = set()
+        self.trail.add((px, py))
+
         # Viewport size determined at runtime
         self.viewport_width, self.viewport_height = self._get_dynamic_viewport_size()
 
@@ -102,7 +107,9 @@ class Game:
             frame_start = time.time()
             self._render()
             command = _getch()
-            self._handle_input(command)
+            moved = self._handle_input(command)
+            if moved:
+                self.trail.add((self.player.x, self.player.y))
             self._reveal_visible_area()  # Reveal after move
             if (self.player.x, self.player.y) == self.exit_pos:
                 self._add_message("You found the exit! Congratulations!")
@@ -128,18 +135,6 @@ class Game:
                 if 0 <= y < len(self.map) and 0 <= x < len(self.map[0]):
                     self.seen[y][x] = True
 
-    def render_tile(self, map_x, map_y, left, top):
-        """
-        Render a single tile at map coordinates (map_x, map_y).
-        Draw door as bold red '0' if visible.
-        """
-        if (map_x, map_y) == self.exit_pos:
-            return COLOR_BOLD_RED + '0' + COLOR_RESET
-        if self.seen[map_y][map_x]:
-            return self.map[map_y][map_x]
-        else:
-            return ' '
-
     def _render(self, final=False):
         os.system("cls" if os.name == "nt" else "clear")
 
@@ -159,9 +154,15 @@ class Game:
             line = []
             for x in range(left, right):
                 if (x, y) == (self.player.x, self.player.y):
-                    line.append('@')
+                    line.append(f"{COLOR_GREEN}@{COLOR_RESET}")
+                elif (x, y) in self.trail and self.seen[y][x] and self.map[y][x] == '.':
+                    line.append(f"{COLOR_GREEN}·{COLOR_RESET}")
+                elif (x, y) == self.exit_pos and self.seen[y][x]:
+                    line.append(f"{COLOR_BOLD_RED}0{COLOR_RESET}")
+                elif self.seen[y][x]:
+                    line.append(self.map[y][x])
                 else:
-                    line.append(self.render_tile(x, y, left, top))
+                    line.append(' ')
             print("".join(line))
 
         # Always print three lines at the bottom
@@ -183,17 +184,26 @@ class Game:
         elif command in ("d", "D"):
             dx = 1
         elif command in ("q", "Q"):
-            self.running = False
-            print("Goodbye!")
-            return
+            print("Are you sure you want to quit? (y/N)", end=' ', flush=True)
+            confirm = _getch()
+            print(confirm)  # Echo the character so the user sees what they pressed
+            if confirm in ("y", "Y"):
+                self.running = False
+                print("Goodbye!")
+                return False
+            else:
+                self._add_message("Quit canceled.")
+                return False
         else:
             self._add_message("Invalid input! Use W/A/S/D to move, Q to quit.")
-            return
+            return False
         moved = self.player.move(dx, dy, self.map)
         if moved:
             self.tick += 1
         else:
             self._add_message("You can't walk there.")
+        return moved
+
 
     def _add_message(self, msg):
         self.messages.append(msg)
