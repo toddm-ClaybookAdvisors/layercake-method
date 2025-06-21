@@ -1,0 +1,92 @@
+# Devlog — Layer 20
+
+## Prompt 0020
+
+**Original Prompt:**
+Make the player green and add have it leave a green trail behind it indicating where it has been only tiles it has passed over will be turned green.   Put any color codes in a constant that goes at the top of the file with the other color constants.
+
+---
+
+## Transcript
+
+Todd: Make the player green and add have it leave a green trail behind it indicating where it has been only tiles it has passed over will be turned green.   Put any color codes in a constant that goes at the top of the file with the other color constants.
+
+ai-agent:  
+**Instruction (Prompt 0020):**  
+Make the player green and have it leave a green trail behind it, indicating where it has been—only tiles it has passed over will be turned green. Place any color codes in a constant at the top of the file with the other color constants.
+
+---
+(ai-agent describes the implementation plan and code for Layer 20, including the addition of `COLOR_GREEN`, logic for player trail, colorized rendering, etc.)
+
+Todd: show me game.py again
+
+ai-agent: (outputs game.py in chunks; Todd requests the rest, ai-agent continues to output the code)
+
+Todd: yes give me the rest
+
+ai-agent: (outputs the next part)
+
+Todd: yes
+
+ai-agent: (outputs the final part; asks if Todd wants the color fix applied)
+
+Todd: yes
+
+ai-agent: (applies ANSI green for player/trail, confirms code has been patched)
+
+Todd: show me the code in one window
+
+ai-agent: (outputs the full game.py in one code block, notes accidental duplicate line for player that should be cleaned at commit)
+
+Todd: I want to test the code first.  Give the full function text that contains the changes
+
+ai-agent: (outputs the new `_render` function using COLOR_GREEN)
+
+Todd: pull the color code out into a constant
+
+ai-agent: (patches the code, moves color code to COLOR_GREEN at the top, confirms patch applied)
+
+Todd: give me the new render code again
+
+ai-agent: (outputs the `_render()` function using COLOR_GREEN and COLOR_RESET constants)
+
+Todd: if I mov this over to 4.1 what will it know from this context.
+
+ai-agent: (explains what would/wouldn’t be known; provides advice and offers a thread reboot kit)
+
+Todd: here is the current state of the game code  
+(ai-agent confirms new uploads received and context established)
+
+Todd: use the files upload to the project to reistablish the base context
+
+ai-agent: (summarizes and formalizes the new base context for the project using uploaded files)
+
+Todd: record:  
+Make the player green and add have it leave a green trail behind it indicating where it has been only tiles it has passed over will be turned green.   Put any color codes in a constant that goes at the top of the file with the other color constants.
+
+ai-agent: (confirms, provides clear implementation plan, and outputs code)
+
+Todd: got this error:  
+(AttributeError: 'Game' object has no attribute '_reveal_visible_area')
+
+ai-agent: (troubleshoots the error, provides the missing method)
+
+Todd: generate the whole file
+
+ai-agent: (outputs complete, ready-to-use game.py implementing Layer 20)
+
+Todd: looks good, add one more feature.   when using Q as the quit command it's too easy to accidentally press it.  what would be a better alternative?
+
+ai-agent: (suggests common alternatives, recommends confirmation prompt, asks if Todd wants to proceed)
+
+---
+
+## Implementation Notes
+
+- Added COLOR_GREEN constant at the top of game.py.
+- Added `self.trail` set to Game to track visited tiles.
+- Modified `_render()` to show green @ for the player, and green · for trail tiles, using the color constant.
+- Added, tested, and debugged as described in the transcript.
+- Confirmed all color codes are now constants; code is cleaned for accidental duplicate lines before commit.
+
+
