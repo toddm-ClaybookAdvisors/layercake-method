@@ -218,6 +218,18 @@ Implement an adversary that explores the dungeon, leaves a red trail, follows ha
 - The player moves at half speed on adversary trail tiles.
 - All win/loss, visual, and fog-of-war conventions are preserved.
 
+## Prompt 0023
+
+**Instruction:**
+Refactor the codebase by moving all entity logic (`Player`, `Adversary`) to `entities.py`, all rendering logic to `renderer.py`, and all utilities to `utils.py`. Update `game.py` to orchestrate the modules, clean up logic, and add high-level docstrings/comments throughout. Preserve all game features and behaviors.
+
+**Result:**
+- Entity, rendering, and utility logic are now fully modular.
+- `game.py` orchestrates the game, calling into modular components.
+- All features (adversary, trails, slow effect, fog, win/loss) are retained.
+- Code is organized, readable, and ready for future expansion.
+
+
 
 
 

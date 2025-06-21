@@ -429,6 +429,30 @@ behavior: moves randomly until it finds a wall then it follows the wall. If it e
 → See: src/game.py  
 → Commit: 0022 (feat: adversary robustly locks on, explores, and follows hallways (0022))
 
+## Prompt 0023: Refactor codebase to improve modularity and maintainability
+
+**Original Prompt:**
+Layer 23 is going to be a refactor. what are your suggestions  
+yes, let's go with your plan  
+test  
+complete
+
+**Instruction:**
+- Move entity logic (`Player`, `Adversary`) to `entities.py` with self-contained state for trail and exploration.
+- Move all rendering and color/symbol logic to `renderer.py`.
+- Move all utility functions and magic constants to `utils.py`.
+- Refactor `game.py` to handle only the main game loop, orchestration, and state, using the above modules.
+- Add docstrings and high-level comments throughout.
+- Ensure all imports, behaviors, and fog/trail/lock-on logic are preserved and tested.
+
+**Result:**
+- The codebase is fully modular: entities, rendering, and utilities are each separated into their own files.
+- `game.py` is clean, orchestrates all modules, and remains the main entry point.
+- All previous features (adversary logic, trails, slow effect, fog-of-war, etc.) are fully preserved.
+- Code is ready for future expansion.
+
+→ See: src/game.py, src/entities.py, src/renderer.py, src/utils.py  
+→ Commit: 0023 (refactor: modularize entities, rendering, utils, and docstrings (0023))
 
 
 

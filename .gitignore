@@ -1,48 +1,50 @@
-# Byte-compiled / optimized / DLL files
+# Virtual environment (Poetry-managed)
+.venv/
+# Older manual venvs (if you ever had them)
+venv/
+
+# Poetry lock file (optional to ignore, but typically tracked)
+# poetry.lock
+
+# Bytecode cache
 __pycache__/
 *.py[cod]
-*$py.class
-
-# Virtual environment
-venv/
-env/
-ENV/
-
-# Python egg
-*.egg
-*.egg-info/
-dist/
-build/
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# PyInstaller
-*.pyc
 *.pyo
-*.pyd
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
+# Editor config
+*.swp
+*.swo
+*~
 
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# VS Code
-.vscode/
-.history/
-llm-game-workspace.code-workspace
-
-# macOS
+# OS files
 .DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment config
+.env
+.env.*
+
+# pyenv
+.python-version
+
+# Mac extended attributes
+*.DS_Store
+
+# Backup files
+*.bak
+
+# Pipreqs cache (if you ever use it interactively)
+pipreqs.log
+
+# pytest and test cache
+.cache/
+.pytest_cache/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+

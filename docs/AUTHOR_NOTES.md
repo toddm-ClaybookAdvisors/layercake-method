@@ -20,3 +20,6 @@ It took me way too long to come up to speed with the process.  I need to figure 
 *note 7* 
 switching to 4.1 is interesting.  The code is wayyyyy better, but the ability to follow instructions is pretty bad.  It made unasked for improvements, but they were cool.  Getting it to follow my output formats was difficult.   I wish I could use 4.1 for code and 4o for the rest.
 
+*note 8*
+After the last refactor I'm going to rethink the project structure PROMTS.md and CHAT_LOG.md seem redundant.  Along with a CHAT_LOG.md will probably be replaced with the devlog
+
