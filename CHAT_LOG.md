@@ -195,6 +195,17 @@ Make the player green and have it leave a green trail behind it, indicating wher
 - Only traversed tiles are marked; fog and UI are unchanged.
 - All color codes are defined as top-level constants in `game.py`.
 
+## Prompt 0021
+
+**Instruction:**
+Render the player as a green stick figure (`†`) and display the player’s (x, y) coordinates in the top info bar.
+
+**Result:**
+- The player is rendered as a green `†`.
+- The top info bar now includes `Pos: (x, y)`.
+- All other game functionality is unchanged.
+
+
 
 
 

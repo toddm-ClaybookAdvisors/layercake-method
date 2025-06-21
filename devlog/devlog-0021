@@ -1,0 +1,42 @@
+# Devlog — Layer 21
+
+## Prompt 0021
+
+**Original Prompt:**
+Visual, Sterling would like the player to look more like a stick figure  
+before we finish this layer, one more thing. Please add the x,y coordinates to the top info bar
+
+---
+
+## Transcript
+
+Todd: Visual, Sterling would like the player to look more like a stick figure
+
+ai-agent:  
+Instruction:  
+Update the player’s appearance to a green stick figure (`†`), using the COLOR_GREEN constant.  
+All other features remain unchanged.
+
+Todd: before we finish this layer, one more thing. Please add the x,y coordinates to the top info bar
+
+ai-agent:  
+Acknowledged. The top info bar will now display the player’s coordinates as `Pos: (x, y)`, in addition to the version, tick, and FPS.
+
+Todd: code preview
+
+ai-agent:  
+(Provides code preview for rendering `†` as the player and adding position to the status bar.)
+
+Todd: commit layer
+
+ai-agent:  
+Layer committed as described.
+
+---
+
+## Implementation Notes
+
+- Replaced green `@` with green `†` for the player.
+- Added player position to the status bar: `Pos: (x, y)`.
+- All logic for trail, fog, and UI preserved.
+

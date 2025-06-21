@@ -138,7 +138,7 @@ class Game:
     def _render(self, final=False):
         os.system("cls" if os.name == "nt" else "clear")
 
-        overlay = f"{VERSION}   Tick: {self.tick}   FPS: {int(self.fps)}"
+        overlay = f"{VERSION}   Tick: {self.tick}   FPS: {int(self.fps)}   Pos: ({self.player.x}, {self.player.y})"
         print(overlay)
 
         # Compute viewport bounds
@@ -154,7 +154,7 @@ class Game:
             line = []
             for x in range(left, right):
                 if (x, y) == (self.player.x, self.player.y):
-                    line.append(f"{COLOR_GREEN}@{COLOR_RESET}")
+                    line.append(f"{COLOR_GREEN}†{COLOR_RESET}")  # stick figure
                 elif (x, y) in self.trail and self.seen[y][x] and self.map[y][x] == '.':
                     line.append(f"{COLOR_GREEN}·{COLOR_RESET}")
                 elif (x, y) == self.exit_pos and self.seen[y][x]:
@@ -164,6 +164,7 @@ class Game:
                 else:
                     line.append(' ')
             print("".join(line))
+
 
         # Always print three lines at the bottom
         print("Controls: W/A/S/D = move   Q = quit")
