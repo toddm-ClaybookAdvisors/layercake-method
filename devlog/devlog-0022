@@ -1,0 +1,74 @@
+# Devlog — Layer 22
+
+## Prompt 0022
+
+**Original Prompt:**
+let's add the adversary.  
+icon: a bold red X  
+behavior: moves randomly until it finds a wall then it follows the wall. If it encounters the players green trail it follows it until it encounters the player. the adversary has a red trail. if it touches the player the player loses. the adversary can see two tiles around it.
+
+---
+
+## Transcript
+
+Todd: let's add the adversary.  
+icon: a bold red X  
+behavior: moves randomly until it finds a wall then it follows the wall. If it encounters the players green trail it follows it until it encounters the player. the adversary has a red trail. if it touches the player the player loses. the adversary can see two tiles around it.
+
+ai-agent: [Restates and plans features]
+
+Todd: preview
+
+ai-agent: [Shows code preview]
+
+Todd: see full updated game.py so we can test it
+
+ai-agent: [Shows full code]
+
+Todd: the adversary stopped moving. It is allowed to backtrack to get unstuck if that was the issue
+
+ai-agent: [Describes fix, offers new code]
+
+Todd: the entire game.py using the optional safety
+
+ai-agent: [Shows corrected game.py]
+
+Todd: the adversary's behavior is still weird. It is not exploring. As a clarification, when it finds your trail you get a message. The adversary is not visible under the fog of war.
+
+ai-agent: [Plans improvements: true exploration, player notification, fog hiding]
+
+Todd: yes, we also need the "lock on" functionality
+
+ai-agent: [Acknowledges, confirms]
+
+Todd: yes, show me the full code
+
+ai-agent: [Shows full improved code]
+
+Todd: the "lock on" behavior stopped working
+
+ai-agent: [Explains why, suggests BFS from adversary to player along trail tiles]
+
+Todd: yes
+
+ai-agent: [Shows full code with robust lock-on]
+
+Todd: the adversary still doesn't go towards the player when it finds the player's path. The adversary also needs to go through a wall gap and follow the hallway so it does't just bounce around
+
+ai-agent: [Explains need for BFS to player and explicit hallway-following]
+
+Todd: yes
+
+ai-agent: [Final code: BFS lock-on to player and true gap/hallway following]
+
+Todd: commit layer
+
+ai-agent: [Shows artifacts and commit command]
+
+---
+
+## Implementation Notes
+
+- All features were tested and refined in direct response to the full conversation above.
+- See the transcript for precise rationale and code evolution.
+

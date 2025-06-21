@@ -205,6 +205,20 @@ Render the player as a green stick figure (`†`) and display the player’s (x,
 - The top info bar now includes `Pos: (x, y)`.
 - All other game functionality is unchanged.
 
+## Prompt 0022
+
+**Instruction:**
+Implement an adversary that explores the dungeon, leaves a red trail, follows hallways/gaps, and robustly locks onto the player's trail using BFS to the player along green trail tiles. The adversary is hidden under fog, notifies the player on lock-on, and slows the player on red trail tiles.
+
+**Result:**
+- Adversary is a bold red `X`, hidden under fog-of-war, leaves a red trail, and actively explores the map.
+- When the adversary sees the player's green trail, it uses BFS to follow the trail directly to the player, moving one step per turn along the path.
+- When in a 1-tile-wide passage, the adversary commits to moving forward through it.
+- The player receives a warning message when lock-on occurs.
+- The player moves at half speed on adversary trail tiles.
+- All win/loss, visual, and fog-of-war conventions are preserved.
+
+
 
 
 

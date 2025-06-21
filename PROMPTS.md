@@ -404,6 +404,32 @@ before we finish this layer, one more thing. Please add the x,y coordinates to t
 → See: src/game.py  
 → Commit: 0021 (feat: player is green stick figure, position added to info bar (0021))
 
+## Prompt 0022: Adversary lock-on, exploration, and hallway-following
+
+**Original Prompt:**
+let's add the adversary.  
+icon: a bold red X  
+behavior: moves randomly until it finds a wall then it follows the wall. If it encounters the players green trail it follows it until it encounters the player. the adversary has a red trail. if it touches the player the player loses. the adversary can see two tiles around it.
+(the prompt evolved to require robust pathfinding lock-on, hallway-following, fog-of-war, and player slow on red trail—see devlog for full dialog.)
+
+**Instruction:**
+- Add an adversary (`X`, bold red) that explores the dungeon, leaves a red trail, and is hidden under fog.
+- When the adversary sees any part of the player's green trail, it robustly “locks on” using BFS from its position to the player *only along green trail tiles*, and pursues as far as the trail leads.
+- When in a 1-tile-wide hallway or gap, the adversary commits to moving straight through, only turning at intersections or dead ends.
+- When the adversary locks on, the player receives a message ("You feel a chill...").
+- If the player stands on a red trail tile, they are slowed and can only move every other turn.
+- The adversary is only rendered if visible to the player (i.e., not under fog-of-war).
+- If the adversary reaches the player, the player loses.
+
+**Result:**
+- The adversary actively explores, commits to hallway movement, and robustly pursues the player via green trail when possible.
+- All visuals and features are fog-of-war-aware.
+- Slowing, trail, and win/loss conditions function as described.
+
+→ See: src/game.py  
+→ Commit: 0022 (feat: adversary robustly locks on, explores, and follows hallways (0022))
+
+
 
 
 
