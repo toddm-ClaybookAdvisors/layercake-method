@@ -45,7 +45,6 @@ When bugs are encountered, the assistant enters a structured debug mode using is
 
 ---
 
-
 ## Prompt Tracking
 
 Prompt and result pairs are tracked using Git commit history and a single file named `PROMPTS.md`.
@@ -60,28 +59,30 @@ This avoids the need for managing dozens of small files while maintaining a full
 
 ## Directory Structure
 
-```
 game-example/
-├── src/                     # Live application code
-│   ├── game.py
-│   └── mapgen.py
+├── src/ # Live application code
+│ ├── game.py # Main entry point, game loop, orchestration
+│ ├── entities.py # Player, Adversary, and all entity logic/state
+│ ├── renderer.py # Rendering, colorization, and display logic
+│ ├── utils.py # Utility functions, terminal helpers, shared constants
+│ └── mapgen.py # Map generation logic (unchanged from earlier layers)
 │
-├── debug/                   # Isolated fix branches for debugging sessions
-│   └── debug-XXXX-a/
-│       ├── a1/
-│       ├── a2/
-│       └── README.md        # Full transcript and fix summary
+├── debug/ # Isolated fix branches for debugging sessions
+│ └── debug-XXXX-a/
+│ ├── a1/
+│ ├── a2/
+│ └── README.md # Full transcript and fix summary
 │
-├── chat-transition/         # Logs transitions between chat threads
-│   ├── transition-001.md
-│   └── transition-002.md    # Latest session boundary
+├── chat-transition/ # Logs transitions between chat threads
+│ ├── transition-001.md
+│ └── transition-002.md # Latest session boundary
 │
-├── PROMPTS.md               # Each prompt with clean instruction + result
-├── CHAT_LOG.md              # Chronological log of recorded interactions
-├── PROMPT_INDEX.md          # Prompt-to-commit index with links
-├── AUTHOR_NOTES.md          # Optional human notes
-└── README.md                # (This file)
-```
+├── PROMPTS.md # Each prompt with clean instruction + result
+├── CHAT_LOG.md # Chronological log of recorded interactions
+├── PROMPT_INDEX.md # Prompt-to-commit index with links (updated after merge to main)
+├── AUTHOR_NOTES.md # Optional human notes
+├── README.md # (This file)
+└── PYTHON_SETUP.md # [See below: Python install instructions]
 
 
 ---
@@ -108,61 +109,14 @@ This project is not just about building a game. It demonstrates:
 - Python 3 installed
 - Git for version control
 
-The first prompt will set up the Python environment for development.
+For full instructions, see [PYTHON_SETUP.md](./PYTHON_SETUP.md).
 
 ---
 
-## Python Environment Setup (macOS)
+## How to Run the Game
 
-Follow these steps to install Python 3 and create a development environment for the project.
-
-### 1. Install Homebrew
-
-If you don’t already have Homebrew (a macOS package manager), install it using the following command:
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-### 2. Install Python 3
-
-Once Homebrew is installed, use it to install Python:
-
-```bash
-brew install python
-```
-
-Verify installation:
-
-```bash
-python3 --version
-```
-
-### 3. Create and Activate a Virtual Environment
-
-From the root of the project directory:
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
-Your shell prompt should now begin with `(venv)` indicating the environment is active.
-
-### 4. Upgrade Pip and Track Dependencies
-
-```bash
-pip install --upgrade pip
-pip freeze > requirements.txt
-```
-
-This upgrades pip and creates a requirements file that can be used to reproduce the environment.
-
-### 5. Run the Game (Once Code Is Added)
-
-Later, when the first game loop is implemented, you can run the game like this:
+After following the environment setup, from the root of the project directory:
 
 ```bash
 cd src
 python3 game.py
-```

@@ -1,0 +1,44 @@
+# Devlog — Layer 23
+
+## Prompt 0023
+
+**Original Prompt:**
+Layer 23 is going to be a refactor. what are your suggestions  
+yes, let's go with your plan  
+test  
+complete
+
+---
+
+## Transcript
+
+Todd: Layer 23 is going to be a refactor. what are your suggestions
+
+ai-agent: [Suggests modularization: entities.py, renderer.py, utils.py, etc.]
+
+Todd: yes, let's go with your plan
+
+ai-agent: [Outlines the structure of each module and refactor goals.]
+
+Todd: yes
+
+ai-agent: [Previews file structure and module content.]
+
+Todd: test
+
+ai-agent: [Generates the full, ready-to-run code for all affected files.]
+
+Todd: complete
+
+ai-agent: [Locks in all code as final, generates documentation, and commit command.]
+
+---
+
+## Implementation Notes
+
+- All entity logic (Player, Adversary) is in `entities.py` with encapsulated trail/exploration state.
+- All rendering logic and colorization is in `renderer.py`.
+- All non-gameplay helpers and constants in `utils.py`.
+- `game.py` is the main entry, orchestrating the full game and all interactions.
+- All features from previous layers are preserved and tested.
+
