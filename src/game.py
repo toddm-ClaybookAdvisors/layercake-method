@@ -1,14 +1,10 @@
-"""
-game.py
-
-LLM-driven 2D game demonstration — all logic, features, and refactors generated via prompt.
-"""
-
 import os
 import sys
 import time
 import re
 import json
+import random
+from collections import deque
 from mapgen import generate_map
 
 if os.name == "nt":
@@ -71,6 +67,113 @@ class Player:
             return True
         return False
 
+class Adversary:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.mode = "explore"
+        self.last_dir = (0, 0)
+        self.explored = set()
+        self.explored.add((x, y))
+        self.locked_on = False
+        self.in_hallway = False
+
+    def move(self, game, player_trail, player_pos):
+        # 1. Robust Lock-On: BFS from adversary to player along green trail tiles
+        vision_trails = []
+        for dx in range(-2, 3):
+            for dy in range(-2, 3):
+                tx, ty = self.x + dx, self.y + dy
+                if (tx, ty) in player_trail and game._is_floor(tx, ty):
+                    vision_trails.append((tx, ty))
+        lockon_path = None
+        if vision_trails:
+            lockon_path = self._find_trail_path_to_player(game, player_trail, player_pos)
+        if lockon_path and len(lockon_path) > 1:
+            if not self.locked_on:
+                game._add_message("You feel a chill... something is following your trail!")
+            self.locked_on = True
+            self.x, self.y = lockon_path[1]
+            self.last_dir = (lockon_path[1][0] - lockon_path[0][0], lockon_path[1][1] - lockon_path[0][1])
+            self.mode = "trail_follow"
+            self.explored.add((self.x, self.y))
+            return
+        else:
+            self.locked_on = False
+
+        # 2. Hallway following: detect 1-tile-wide gaps/hallways and follow them
+        if self._in_hallway(game):
+            self.in_hallway = True
+            dx, dy = self.last_dir
+            nx, ny = self.x + dx, self.y + dy
+            if game._is_floor(nx, ny):
+                self.x, self.y = nx, ny
+                self.explored.add((self.x, self.y))
+                return
+            else:
+                # At the end of hallway, pick new direction
+                self.in_hallway = False
+
+        # 3. Exploration: seek adjacent unexplored floor tiles
+        for dx, dy in [(1,0),(-1,0),(0,1),(0,-1)]:
+            nx, ny = self.x + dx, self.y + dy
+            if game._is_floor(nx, ny) and (nx, ny) not in self.explored:
+                self.x, self.y = nx, ny
+                self.last_dir = (dx, dy)
+                self.mode = "explore"
+                self.explored.add((self.x, self.y))
+                return
+
+        # 4. If all neighbors explored, pick random direction (can backtrack)
+        dirs = [(1,0),(-1,0),(0,1),(0,-1)]
+        random.shuffle(dirs)
+        for dx, dy in dirs:
+            nx, ny = self.x + dx, self.y + dy
+            if game._is_floor(nx, ny):
+                self.x, self.y = nx, ny
+                self.last_dir = (dx, dy)
+                self.mode = "explore"
+                self.explored.add((self.x, self.y))
+                return
+
+    def _find_trail_path_to_player(self, game, player_trail, player_pos):
+        # BFS from adversary to player, only traversing green trail tiles
+        queue = deque()
+        visited = set()
+        prev = {}
+        start = (self.x, self.y)
+        queue.append(start)
+        visited.add(start)
+        while queue:
+            cx, cy = queue.popleft()
+            if (cx, cy) == player_pos:
+                path = [(cx, cy)]
+                while (cx, cy) != start:
+                    cx, cy = prev[(cx, cy)]
+                    path.append((cx, cy))
+                path.reverse()
+                return path
+            for dx, dy in [(1,0),(-1,0),(0,1),(0,-1)]:
+                nx, ny = cx + dx, cy + dy
+                if (
+                    (nx, ny) not in visited and
+                    (nx, ny) in player_trail and
+                    game._is_floor(nx, ny)
+                ):
+                    visited.add((nx, ny))
+                    prev[(nx, ny)] = (cx, cy)
+                    queue.append((nx, ny))
+        return None
+
+    def _in_hallway(self, game):
+        # A hallway/gap is a 1-tile-wide passage: surrounded by walls except front/back
+        wall_count = 0
+        for dx, dy in [(1,0),(-1,0),(0,1),(0,-1)]:
+            nx, ny = self.x + dx, self.y + dy
+            if not game._is_floor(nx, ny):
+                wall_count += 1
+        return wall_count >= 2  # 1-tile passage
+
 class Game:
     def __init__(self, map_width, map_height):
         self.map, (px, py), self.exit_pos = generate_map(map_width, map_height)
@@ -85,12 +188,34 @@ class Game:
         self.seen = [[False for _ in range(map_width)] for _ in range(map_height)]
         self._reveal_visible_area()  # Reveal initial vision
 
-        # === TRAIL: track all tiles the player has ever stepped on ===
+        # Player trail
         self.trail = set()
         self.trail.add((px, py))
 
+        # Adversary: spawn far from player
+        ax, ay = self._find_far_spawn(px, py)
+        self.adversary = Adversary(ax, ay)
+        self.adversary_trail = set()
+        self.adversary_trail.add((ax, ay))
+
+        # For player slow effect
+        self.player_slow_counter = 0
+
         # Viewport size determined at runtime
         self.viewport_width, self.viewport_height = self._get_dynamic_viewport_size()
+
+    def _find_far_spawn(self, px, py):
+        # Place adversary as far from player as possible on a floor tile
+        best = (0, 0)
+        max_dist = -1
+        for y in range(len(self.map)):
+            for x in range(len(self.map[0])):
+                if self.map[y][x] == '.':
+                    d = abs(x - px) + abs(y - py)
+                    if d > max_dist:
+                        best = (x, y)
+                        max_dist = d
+        return best
 
     def _get_dynamic_viewport_size(self):
         term_w, term_h = _get_terminal_size()
@@ -108,13 +233,37 @@ class Game:
             self._render()
             command = _getch()
             moved = self._handle_input(command)
+            # --- PLAYER SLOW ON RED TRAIL ---
+            player_on_red_trail = (self.player.x, self.player.y) in self.adversary_trail
+            if player_on_red_trail:
+                if self.player_slow_counter == 0 and moved:
+                    self.player_slow_counter = 1
+                    self._add_message("You are slowed by the adversary's trail!")
+                elif self.player_slow_counter > 0:
+                    self.player_slow_counter -= 1
+                    moved = False  # Skip move this turn
+                    self._add_message("You are slowed by the adversary's trail!")
+            else:
+                self.player_slow_counter = 0  # Reset when off red trail
             if moved:
                 self.trail.add((self.player.x, self.player.y))
             self._reveal_visible_area()  # Reveal after move
+
+            # --- Adversary moves on every tick ---
+            self.adversary.move(self, self.trail, (self.player.x, self.player.y))
+            self.adversary_trail.add((self.adversary.x, self.adversary.y))
+
+            # Loss condition
+            if (self.adversary.x, self.adversary.y) == (self.player.x, self.player.y):
+                self._add_message("You lose! The adversary caught you!")
+                self._render(final=True)
+                break
+
             if (self.player.x, self.player.y) == self.exit_pos:
                 self._add_message("You found the exit! Congratulations!")
                 self._render(final=True)
                 break
+
             self.tick += 1
             frame_end = time.time()
             self._update_fps(frame_end - frame_start)
@@ -135,6 +284,13 @@ class Game:
                 if 0 <= y < len(self.map) and 0 <= x < len(self.map[0]):
                     self.seen[y][x] = True
 
+    def _is_floor(self, x, y):
+        return (
+            0 <= y < len(self.map) and
+            0 <= x < len(self.map[0]) and
+            self.map[y][x] == '.'
+        )
+
     def _render(self, final=False):
         os.system("cls" if os.name == "nt" else "clear")
 
@@ -153,18 +309,22 @@ class Game:
         for y in range(top, bottom):
             line = []
             for x in range(left, right):
+                visible = self.seen[y][x]
                 if (x, y) == (self.player.x, self.player.y):
-                    line.append(f"{COLOR_GREEN}†{COLOR_RESET}")  # stick figure
-                elif (x, y) in self.trail and self.seen[y][x] and self.map[y][x] == '.':
+                    line.append(f"{COLOR_GREEN}†{COLOR_RESET}")
+                elif visible and (x, y) == (self.adversary.x, self.adversary.y):
+                    line.append(f"{COLOR_BOLD_RED}X{COLOR_RESET}")
+                elif visible and (x, y) in self.trail and self.map[y][x] == '.':
                     line.append(f"{COLOR_GREEN}·{COLOR_RESET}")
-                elif (x, y) == self.exit_pos and self.seen[y][x]:
+                elif visible and (x, y) in self.adversary_trail and self.map[y][x] == '.':
+                    line.append(f"{COLOR_BOLD_RED}·{COLOR_RESET}")
+                elif visible and (x, y) == self.exit_pos:
                     line.append(f"{COLOR_BOLD_RED}0{COLOR_RESET}")
-                elif self.seen[y][x]:
+                elif visible:
                     line.append(self.map[y][x])
                 else:
                     line.append(' ')
             print("".join(line))
-
 
         # Always print three lines at the bottom
         print("Controls: W/A/S/D = move   Q = quit")
@@ -187,7 +347,7 @@ class Game:
         elif command in ("q", "Q"):
             print("Are you sure you want to quit? (y/N)", end=' ', flush=True)
             confirm = _getch()
-            print(confirm)  # Echo the character so the user sees what they pressed
+            print(confirm)
             if confirm in ("y", "Y"):
                 self.running = False
                 print("Goodbye!")
@@ -204,7 +364,6 @@ class Game:
         else:
             self._add_message("You can't walk there.")
         return moved
-
 
     def _add_message(self, msg):
         self.messages.append(msg)
