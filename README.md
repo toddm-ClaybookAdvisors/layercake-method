@@ -1,122 +1,158 @@
-# Building a Game with an LLM — A Prompt-Driven Dev Diary
+# LLM-Driven Game Development
 
-## Purpose
+This project is not a typical game.  
+It is a **transparent, prompt-by-prompt demonstration** of how to use a Large Language Model (LLM) as a complete software development assistant.
 
-This project is a transparent, prompt-by-prompt experiment in building a fully functional 2D adventure game using only natural language instructions to an AI assistant (ChatGPT).
+The final product happens to be a 2D terminal-based adventure game.  
+The true purpose is to document and refine a repeatable methodology for:
 
-The human (me) does not write any of the game’s code directly. Instead, the AI acts as the software engineer — generating all implementation details based on prompts I provide.
-
----
-
-## Methodology
-
-Each step of game development is initiated by a plain-language prompt and executed by the LLM.
-
-Each commit includes:
-- The exact prompt that led to the change
-- The generated code that resulted from it
-- A reference to the commit in a running log file
-
-This creates a clear, traceable evolution of the project from zero to a playable game.
+- Building real software without writing code directly  
+- Capturing all changes through Git-based prompt versioning  
+- Treating the LLM as coder, collaborator, and documentarian  
 
 ---
 
-## Project Context Boot
+## Roles
 
-To fully restore context for this project, use the following files:
+**Human:**  
+- Strategic lead  
+- Prompt author  
+- Reviewer and tester  
 
-- [project-snapshot.md](./project-snapshot.md)
-- [transition-001.md](./chat-transition/transition-001.md)
-- [transition-002.md](./chat-transition/transition-002.md)
-
-In any new thread, say:
-
-> Use the project files above to reinitialize context. Assume `record` mode. No emoji. Follow all documented rules.
-
----
-
-## Debugging Protocol
-
-When bugs are encountered, the assistant enters a structured debug mode using isolated subdirectories (e.g., `debug-0012-a/a1/`) to safely test fixes.
-
-- Each debug session is logged in a dedicated `README.md` under its debug path
-- Final fixes are promoted to the mainline after validation
-- Commit messages for debug fixes always begin with `fix:`
+**LLM:**  
+- Architect  
+- Implementer  
+- Logger and documentarian  
 
 ---
 
-## Prompt Tracking
+## Layer Types
 
-Prompt and result pairs are tracked using Git commit history and a single file named `PROMPTS.md`.
+All work is performed in numbered **layers**, each with one of the following types:
 
-- Each commit message includes the full prompt and a summary of the result.
-- The prompt is also included as a comment at the top of any generated code files.
-- `PROMPTS.md` serves as a human-readable index of the development process.
+- `feature` — Adds new capabilities  
+- `refactor` — Restructures code or logic without changing behavior  
+- `fix` — Resolves bugs or regressions (replaces `debug`)  
+- `move chat` — Begins a new thread, regenerates `README.md` and `chat-boot.md`, refreshes prompt index  
 
-This avoids the need for managing dozens of small files while maintaining a full, navigable history.
+---
+
+## Layer Lifecycle
+
+Each layer follows a strict lifecycle:
+
+1. **`create layer`**  
+   Declare layer type and goal.
+
+2. **Prompt**  
+   Describe the desired change.  
+   The original prompt is recorded **only in the devlog**.
+
+3. **`test`**  
+   LLM returns a full preview of all changed files in a **single markdown block**.
+
+4. **Iterate**  
+   Back-and-forth discussion and refinements are logged in `devlog/devlog-XXXX.md`.
+
+5. **`complete`**  
+   Locks the implementation for finalization.
+
+6. **`commit`**  
+   Generates all artifacts:  
+   - `PROMPTS.md` (cleaned instruction only)  
+   - `CHAT_LOG.md`  
+   - `devlog/` transcript  
+   - Commit with suffix `(XXXX)`  
+   - Updates `PROMPT_INDEX.md` with real links  
+   - Updates `README.md` and `chat-boot.md` if `move chat`  
+
+> `PROMPT_INDEX.md` is updated only after merge to `main`.
+
+---
+
+## Rules and Standards
+
+- All code must be LLM-generated — no human-authored source code  
+- Devlogs include complete conversational transcripts  
+- Code previews must be rendered as **single markdown blocks**  
+- Commits must end with the layer number  
+- All `fix:` commits must begin with `fix:`  
+- No emojis or non-ASCII symbols are permitted  
+- If a file is not in memory, the assistant will prompt you to upload it before proceeding  
+
+---
+
+## Repository Integration
+
+**Commit Links:**  
+`https://github.com/toddm-ClaybookAdvisors/layercake-method/commit/<hash>`
+
+**Prompt Anchors:**  
+`logs/PROMPTS.md#prompt-XXXX`
+
+**Devlogs:**  
+`logs/devlog/devlog-XXXX.md`
 
 ---
 
 ## Directory Structure
 
-game-example/
-├── src/ # Live application code
-│ ├── game.py # Main entry point, game loop, orchestration
-│ ├── entities.py # Player, Adversary, and all entity logic/state
-│ ├── renderer.py # Rendering, colorization, and display logic
-│ ├── utils.py # Utility functions, terminal helpers, shared constants
-│ └── mapgen.py # Map generation logic (unchanged from earlier layers)
-│
-├── debug/ # Isolated fix branches for debugging sessions
-│ └── debug-XXXX-a/
-│ ├── a1/
-│ ├── a2/
-│ └── README.md # Full transcript and fix summary
-│
-├── chat-transition/ # Logs transitions between chat threads
-│ ├── transition-001.md
-│ └── transition-002.md # Latest session boundary
-│
-├── PROMPTS.md # Each prompt with clean instruction + result
-├── CHAT_LOG.md # Chronological log of recorded interactions
-├── PROMPT_INDEX.md # Prompt-to-commit index with links (updated after merge to main)
-├── AUTHOR_NOTES.md # Optional human notes
-├── README.md # (This file)
-└── PYTHON_SETUP.md # [See below: Python install instructions]
+└── README.md  
+├── app  
+│   └── config.json  
+│   ├── src  
+│   │   └── entities.py  
+│   │   └── game.py  
+│   │   └── mapgen.py  
+│   │   └── renderer.py  
+│   │   └── utils.py  
+├── bin  
+│   └── get_project_structure.sh  
+│   └── play_game.sh  
+└── chat-boot.md  
+├── docs  
+│   └── AUTHOR_NOTES.md  
+│   └── PROMT_INDEX.md  
+│   └── PYTHON_SETUP.md  
+├── logs  
+│   └── CHAT_LOG.md  
+│   └── PROMPTS.md  
+│   ├── debug  
+│   │   ├── debug-0009-a  
+│   │   │   └── README.md  
+│   │   │   └── debug-0009-a1.py  
+│   │   │   └── debug-0009-a2.py  
+│   │   ├── debug-0012-a  
+│   │   │   └── README.md  
+│   │   │   ├── a1  
+│   │   │   │   └── game.py  
+│   │   │   │   └── mapgen.py  
+│   │   │   ├── a2  
+│   │   │   │   └── game.py  
+│   │   │   │   └── mapgen.py  
+│   ├── devlog  
+│   │   └── devlog-0017  
+│   │   └── devlog-0019  
+│   │   └── devlog-0020  
+│   │   └── devlog-0021  
+│   │   └── devlog-0022  
+│   │   └── devlog-0023  
+└── start_dev_session.sh
 
 
 ---
 
-## Iteration Format
+## Getting Started
 
-- All prompt/result pairs are committed to Git.
-- Prompt is included in both the commit message and at the top of each modified code file.
-- `PROMPTS.md` logs the high-level evolution in readable format.
-
----
-
-## Why This Matters
-
-This project is not just about building a game. It demonstrates:
-- How large language models can be used as hands-on development collaborators
-- What makes a prompt effective
-- How to trace software evolution transparently from human intent to working code
+1. Install Python 3.11+ — see [PYTHON_SETUP.md](docs/PYTHON_SETUP.md)  
+2. Run the game from `app/src/game.py`  
+3. Start a new layer using `create layer`  
+4. If asked to upload a file, provide the most recent committed version  
 
 ---
 
-## Prerequisites
+## Status
 
-- Python 3 installed
-- Git for version control
-
-For full instructions, see [PYTHON_SETUP.md](./PYTHON_SETUP.md).
-
----
-
-## How to Run the Game
-
-After following the environment setup, from the root of the project directory:
-
-```bash
-cd src
-python3 game.py
+- Latest completed layer: `0023` (modular refactor, new structure)  
+- Current layer: `0024` — `move chat`  
+- Next step: Begin `0025` with `create layer`
