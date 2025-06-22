@@ -22,8 +22,8 @@ All work is organized into numbered **layers**, each with one of the following t
 
 - `feature` — New capabilities or game mechanics  
 - `refactor` — Code or architecture restructuring without behavioral change  
-- `fix` — Resolves regressions or bugs (replaces `debug` mode)  
-- `move chat` — Starts a new thread, updates docs, carries state forward  
+- `fix` — Resolves regressions or bugs  
+- `move chat` — Starts a new thread, updates docs, carries state forward, **but does not increment the Layer number**
 
 ---
 
@@ -51,14 +51,11 @@ Every layer follows the same structured lifecycle:
 6. **`commit`**  
    Generate artifacts:  
    - `PROMPTS.md` → interpreted instruction only  
-   - `CHAT_LOG.md`  
-   - `devlog/devlog-XXXX.md`  
+   - `devlog/devlog-XXXX.md` → *authoritative conversation log*  
    - Git commit (must end with layer number, e.g., `(0024)`)  
-   - `README.md` and `chat-boot.md` if `move chat`  
-   - Update `PROMPT_INDEX.md` with prompt and commit links
+   - `chat-boot.md` if `move chat`  
 
-> `PROMPT_INDEX.md` is updated **after merge to main**
-
+7. After the layer is commited to git remind me not to push yet, then prompt for the new "git log --onefile" then use it generate the `PROMPT_INDEX.md` and create the git ammend command that doesn't update the commit message.
 ---
 
 ## File Expectations
@@ -67,7 +64,36 @@ Every layer follows the same structured lifecycle:
 - If a file is to be modified and is **not already loaded in context**, the assistant will prompt the user to upload it  
 - All code previews must be **complete markdown blocks** — never split across messages  
 - Devlogs include **full transcripts**, including original prompts  
+- **CHAT_LOG.md is now obsolete; devlog files are the authoritative transcript**
+- Devlogs must include the *entire* chat back-and-forth (user and AI), with *no* code or file outputs—just the pure conversation, in a single markdown code block  
 - No emoji or non-ASCII characters are allowed in code, logs, or documentation  
+
+---
+
+## GitHub Integration
+
+All commit links use:  
+`https://github.com/toddm-ClaybookAdvisors/layercake-method/commit/<hash>`
+
+Prompt links use:  
+`logs/PROMPTS.md#prompt-XXXX`
+
+Devlogs are stored at:  
+`logs/devlog/devlog-XXXX.md`
+
+---
+
+## Git Commit Expectations
+
+- All commit messages must be *detailed and explicit*, clearly describing what was changed and why (not just summary bullet points)
+- When producing a `git commit` command, do *not* include any commentary after the command itself
+
+---
+
+## Chat Move Policy
+
+- **A chat move only generates an updated boot prompt and does not increment the Layer number.**
+- All changes, process frustrations, and user-driven policy updates must be immediately reflected in the boot prompt and enforced in all subsequent layers.
 
 ---
 
@@ -91,21 +117,7 @@ Every layer follows the same structured lifecycle:
 │   └── PROMT_INDEX.md  
 │   └── PYTHON_SETUP.md  
 ├── logs  
-│   └── CHAT_LOG.md  
 │   └── PROMPTS.md  
-│   ├── debug  
-│   │   ├── debug-0009-a  
-│   │   │   └── README.md  
-│   │   │   └── debug-0009-a1.py  
-│   │   │   └── debug-0009-a2.py  
-│   │   ├── debug-0012-a  
-│   │   │   └── README.md  
-│   │   │   ├── a1  
-│   │   │   │   └── game.py  
-│   │   │   │   └── mapgen.py  
-│   │   │   ├── a2  
-│   │   │   │   └── game.py  
-│   │   │   │   └── mapgen.py  
 │   ├── devlog  
 │   │   └── devlog-0017  
 │   │   └── devlog-0019  
@@ -113,25 +125,22 @@ Every layer follows the same structured lifecycle:
 │   │   └── devlog-0021  
 │   │   └── devlog-0022  
 │   │   └── devlog-0023  
+│   │   └── devlog-0025  
 └── start_dev_session.sh  
 
 ---
 
 ## Current Status
 
-- **Last layer:** 0023 — modular refactor (src/, poetry, docstrings)  
-- **Current layer:** 0024 — `move chat` to refresh context and finalize new workflow  
+- **Last layer:** 0025 — config, versioning, and rendering refactored to use LAYER  
+- **Current layer:** 0025 — (chat move does *not* increment)  
 - **Next layer:** Use `create layer` to begin new work  
 
 ---
 
-## GitHub Integration
+## Carry Forward Policy
 
-All commit links use:  
-`https://github.com/toddm-ClaybookAdvisors/layercake-method/commit/<hash>`
+- **Any future change in devlog, commit, or prompt-handling style arising from user frustration or process correction must be immediately reflected in this boot prompt and enforced in all layers going forward.**
+- All policy, conversation, or workflow corrections—especially regarding devlog formatting, authoritative record-keeping, and the requirement for the *full, unbroken chat transcript (minus code and files) in the devlog*—must be honored with absolute precision.
 
-Prompt links use:  
-`logs/PROMPTS.md#prompt-XXXX`
-
-Devlogs are stored at:  
-`logs/devlog/devlog-XXXX.md`
+---

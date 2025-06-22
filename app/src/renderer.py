@@ -15,7 +15,7 @@ class Renderer:
     def render(self, game, player, adversary, exit_pos):
         os = __import__('os')
         os.system("cls" if os.name == "nt" else "clear")
-        overlay = f"{game.version}   Tick: {game.tick}   FPS: {int(game.fps)}   Pos: ({player.x}, {player.y})"
+        overlay = f"Layer: {game.layer}   Tick: {game.tick}   FPS: {int(game.fps)}   Pos: ({player.x}, {player.y})"
         print(overlay)
 
         px, py = player.x, player.y

@@ -7,11 +7,10 @@ Main game loop and state management. Orchestrates player, adversary, renderer, a
 import os
 import sys
 import time
-import json
 from mapgen import generate_map
 from entities import Player, Adversary
 from renderer import Renderer
-from utils import get_terminal_size, get_version, is_open_tile, is_floor
+from utils import get_terminal_size, is_open_tile, is_floor, load_config, get_layer
 
 if os.name == "nt":
     import msvcrt
@@ -22,7 +21,7 @@ else:
 class Game:
     def __init__(self, map_width, map_height):
         self.map, (px, py), self.exit_pos = generate_map(map_width, map_height)
-        self.version = get_version()
+        self.layer = get_layer()
         self.player = Player(px, py)
         self.messages = []
         self.running = True
@@ -123,8 +122,6 @@ class Game:
                 return ""
         else:
             fd = sys.stdin.fileno()
-            import termios
-            import tty
             old_settings = termios.tcgetattr(fd)
             try:
                 tty.setraw(fd)
@@ -168,15 +165,7 @@ class Game:
         self.messages.append(msg)
 
 def main():
-    config = {
-        "map_width": 300,
-        "map_height": 300
-    }
-    try:
-        with open("../config.json") as f:
-            config.update(json.load(f))
-    except Exception:
-        pass
+    config = load_config()
     game = Game(config["map_width"], config["map_height"])
     game.run()
 
