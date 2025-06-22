@@ -454,6 +454,25 @@ complete
 → See: src/game.py, src/entities.py, src/renderer.py, src/utils.py  
 → Commit: 0023 (refactor: modularize entities, rendering, utils, and docstrings (0023))
 
+## Prompt 0024 — move chat
+
+**Instruction:**  
+Move to a new chat thread due to growing session length.  
+Update the bootstrapping files and logs to reflect the current state of the project:
+
+- Regenerate `README.md` with updated layer model, lifecycle, and structure
+- Regenerate `chat-boot.md` to match
+- Update `PROMPT_INDEX.md` with real commit links and prompt anchors
+
+**Artifacts:**
+- `README.md`  
+- `chat-boot.md`  
+- `docs/PROMPT_INDEX.md`
+
+**Commit:**  
+[`9c2d1f6`](https://github.com/toddm-ClaybookAdvisors/layercake-method/commit/9c2d1f6) — `chore: move chat and refresh README, chat boot, and prompt index (0024)`
+
+
 
 
 

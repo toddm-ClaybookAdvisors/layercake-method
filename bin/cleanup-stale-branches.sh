@@ -1,42 +1,13 @@
 #!/bin/zsh
 
-###############################################################################
-# cleanup-stale-branches.sh
-#
-# Description:
-#   Identifies and optionally deletes local and remote Git branches that have
-#   already been merged or rebased into `main`. Focuses only on `feature/*`
-#   branches and supports force-delete prompts for rebased content.
-#
-#   Uses `git cherry` to detect semantic differences, even after rebases.
-#
-# Options:
-#   --quiet, -q    Suppress warnings (e.g., failed safe delete messages)
-#   --debug, -d    Show `git cherry -v` output for branches that were NOT deleted
-#
-# Usage:
-#   ./cleanup-stale-branches.sh
-#   ./cleanup-stale-branches.sh --quiet
-#   ./cleanup-stale-branches.sh --debug
-#   ./cleanup-stale-branches.sh --quiet --debug
-#
-# Requirements:
-#   - Zsh
-#   - Git must be installed and initialized in the current repository
-#
-###############################################################################
-
 set -e
 
 # Option parsing
 QUIET=0
-DEBUG=0
 
 for arg in "$@"; do
   if [[ "$arg" == "--quiet" || "$arg" == "-q" ]]; then
     QUIET=1
-  elif [[ "$arg" == "--debug" || "$arg" == "-d" ]]; then
-    DEBUG=1
   fi
 done
 
@@ -50,13 +21,8 @@ echo "Scanning for local feature branches fully included in main..."
 stale_local_branches=()
 
 for branch in $(git branch --format='%(refname:short)' | grep '^feature/'); do
-  cherry_output=$(git cherry main "$branch")
-  if [ -z "$(echo "$cherry_output" | grep '^+')" ]; then
+  if [ -z "$(git cherry main "$branch" | grep '^+')" ]; then
     stale_local_branches+=("$branch")
-  elif [[ "$DEBUG" -eq 1 ]]; then
-    echo ""
-    echo "Debug for $branch:"
-    git cherry -v main "$branch"
   fi
 done
 
@@ -106,13 +72,8 @@ stale_remote_branches=()
 
 for branch in ${(f)"$(git branch -r | grep '^origin/feature/')"}; do
   remote_branch=${branch#origin/}
-  cherry_output=$(git cherry origin/main "origin/$remote_branch")
-  if [ -z "$(echo "$cherry_output" | grep '^+')" ]; then
+  if [ -z "$(git cherry origin/main "origin/$remote_branch" | grep '^+')" ]; then
     stale_remote_branches+=("$remote_branch")
-  elif [[ "$DEBUG" -eq 1 ]]; then
-    echo ""
-    echo "Debug for origin/$remote_branch:"
-    git cherry -v origin/main "origin/$remote_branch"
   fi
 done
 
