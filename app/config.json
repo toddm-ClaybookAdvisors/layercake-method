@@ -3,5 +3,6 @@
     "map_height": 50,
     "viewport_width": 40,
     "viewport_height": 20,
-    "LAYER": 25
+    "LAYER": 26,
+    "debug": true
 }

@@ -23,7 +23,7 @@ All work is organized into numbered **layers**, each with one of the following t
 - `feature` — New capabilities or game mechanics  
 - `refactor` — Code or architecture restructuring without behavioral change  
 - `fix` — Resolves regressions or bugs  
-- `move chat` — Starts a new thread, updates docs, carries state forward, **but does not increment the Layer number**
+- `move chat` — Starts a new thread, updates only `chat-boot.md`, carries state forward, **but does not increment the Layer number**
 
 ---
 
@@ -55,7 +55,8 @@ Every layer follows the same structured lifecycle:
    - Git commit (must end with layer number, e.g., `(0024)`)  
    - `chat-boot.md` if `move chat`  
 
-7. After the layer is commited to git remind me not to push yet, then prompt for the new "git log --onefile" then use it generate the `PROMPT_INDEX.md` and create the git ammend command that doesn't update the commit message.
+7. After the layer is commited to git remind me not to push yet, then prompt for the new "git log --onefile" then use it generate the `LAYER_INDEX.md` and create the git ammend command that doesn't update the commit message.
+
 ---
 
 ## File Expectations
@@ -90,10 +91,12 @@ Devlogs are stored at:
 
 ---
 
-## Chat Move Policy
+## Move Chat Policy (Revised)
 
-- **A chat move only generates an updated boot prompt and does not increment the Layer number.**
-- All changes, process frustrations, and user-driven policy updates must be immediately reflected in the boot prompt and enforced in all subsequent layers.
+- **A “move chat” operation only generates and updates the `chat-boot.md`.**
+- Do **not** update, generate, or touch `chat-transition/`, `README.md`, or `LAYER_INDEX.md` during a move chat.
+- All new rules, policies, and templates must be carried forward in the new `chat-boot.md` only.
+- All other files and logs are unchanged; their updates happen only in feature, fix, or transition layers.
 
 ---
 
@@ -114,7 +117,8 @@ Devlogs are stored at:
 └── chat-boot.md  
 ├── docs  
 │   └── AUTHOR_NOTES.md  
-│   └── PROMT_INDEX.md  
+│   └── PROMPTS.md  
+│   └── LAYER_INDEX.md  
 │   └── PYTHON_SETUP.md  
 ├── logs  
 │   └── PROMPTS.md  
@@ -126,14 +130,15 @@ Devlogs are stored at:
 │   │   └── devlog-0022  
 │   │   └── devlog-0023  
 │   │   └── devlog-0025  
+│   │   └── devlog-0026  
 └── start_dev_session.sh  
 
 ---
 
 ## Current Status
 
-- **Last layer:** 0025 — config, versioning, and rendering refactored to use LAYER  
-- **Current layer:** 0025 — (chat move does *not* increment)  
+- **Last layer:** 0026 — Add config-driven debug mode that disables fog of war  
+- **Current layer:** 0026 — (chat move does *not* increment)  
 - **Next layer:** Use `create layer` to begin new work  
 
 ---
@@ -144,3 +149,37 @@ Devlogs are stored at:
 - All policy, conversation, or workflow corrections—especially regarding devlog formatting, authoritative record-keeping, and the requirement for the *full, unbroken chat transcript (minus code and files) in the devlog*—must be honored with absolute precision.
 
 ---
+
+## Explicit Template Inclusion Policy
+
+- **All file templates included in the boot file must be provided as markdown code blocks, with all formatting and content exactly as it should appear in the relevant output files.**
+- **Templates must appear at the very bottom of chat-boot.md.**
+- **Do not omit, abbreviate, or alter any part of a template.**
+- **Do not provide templates as partial snippets, as lists, or as plain text—always as complete markdown code blocks for direct copy-paste.**
+
+
+## Template Section
+
+### logs/PROMPTS.md entry template
+
+## Prompt 00XX: [Short summary of feature, fix, or refactor]
+
+**Original Prompt:**
+
+[Paste the user’s original prompt text here.]
+
+**Instruction:**
+
+[Summarize the interpreted instruction in a single paragraph, as it will be implemented.]
+
+**Result:**
+
+→ See: [affected files or modules]  
+→ Commit: 00XX ([summary of commit, matching commit message])
+
+### docs/LAYER_INDEX.md entry template
+
+| Layer  | Description                                                                   | Prompt Link                                           | Commit Link                                                                              |
+|--------|-------------------------------------------------------------------------------|-------------------------------------------------------|------------------------------------------------------------------------------------------|
+| 00XX   | [Short description of feature, fix, or refactor]                              | [logs/PROMPTS.md#prompt-00XX](logs/PROMPTS.md#prompt-00XX) | [<commit_hash>](https://github.com/toddm-ClaybookAdvisors/layercake-method/commit/<commit_hash>) |
+

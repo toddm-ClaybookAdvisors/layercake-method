@@ -9,11 +9,14 @@ COLOR_GREEN = '\033[92m'
 COLOR_RESET = '\033[0m'
 
 class Renderer:
-    def __init__(self):
-        pass
+    def __init__(self, config):  # <<< CHANGED: accept config
+        self.config = config     # <<< CHANGED: store config
 
     def render(self, game, player, adversary, exit_pos):
-        os = __import__('os')
+        import os
+
+        debug = self.config.get("debug", False)  # <<< CHANGED: use config debug flag
+
         os.system("cls" if os.name == "nt" else "clear")
         overlay = f"Layer: {game.layer}   Tick: {game.tick}   FPS: {int(game.fps)}   Pos: ({player.x}, {player.y})"
         print(overlay)
@@ -29,7 +32,7 @@ class Renderer:
         for y in range(top, bottom):
             line = []
             for x in range(left, right):
-                visible = game.seen[y][x]
+                visible = True if debug else game.seen[y][x]  # <<< CHANGED
                 if (x, y) == (player.x, player.y):
                     line.append(f"{COLOR_GREEN}†{COLOR_RESET}")
                 elif visible and (x, y) == (adversary.x, adversary.y):

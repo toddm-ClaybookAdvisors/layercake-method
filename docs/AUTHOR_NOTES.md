@@ -23,3 +23,5 @@ switching to 4.1 is interesting.  The code is wayyyyy better, but the ability to
 *note 8*
 After the last refactor I'm going to rethink the project structure PROMTS.md and CHAT_LOG.md seem redundant.  Along with a CHAT_LOG.md will probably be replaced with the devlog
 
+*note 9*
+So, 4.1 does stealth refactors which can seriously mess things up.  I had to add explict instructions to not refactor unless asked to, then it went too far and couldn't actually make necessary changes because they were a refactor.   So I loosened it a bit.   I may have to find a tight definition of refacor to include in the boot prompt.

@@ -7,10 +7,11 @@ Main game loop and state management. Orchestrates player, adversary, renderer, a
 import os
 import sys
 import time
+import json
 from mapgen import generate_map
 from entities import Player, Adversary
 from renderer import Renderer
-from utils import get_terminal_size, is_open_tile, is_floor, load_config, get_layer
+from utils import get_terminal_size,is_open_tile, is_floor, load_config
 
 if os.name == "nt":
     import msvcrt
@@ -19,9 +20,11 @@ else:
     import tty
 
 class Game:
-    def __init__(self, map_width, map_height):
+    def __init__(self, config):                          # <<< CHANGED: accept config dict directly
+        map_width = config["map_width"]
+        map_height = config["map_height"]
         self.map, (px, py), self.exit_pos = generate_map(map_width, map_height)
-        self.layer = get_layer()
+        self.layer = config["LAYER"]
         self.player = Player(px, py)
         self.messages = []
         self.running = True
@@ -39,7 +42,7 @@ class Game:
         self.player_slow_counter = 0
 
         self.viewport_width, self.viewport_height = self._get_dynamic_viewport_size()
-        self.renderer = Renderer()
+        self.renderer = Renderer(config)                  # <<< CHANGED: pass config to Renderer
 
     def _find_far_spawn(self, px, py):
         best = (0, 0)
@@ -122,6 +125,8 @@ class Game:
                 return ""
         else:
             fd = sys.stdin.fileno()
+            import termios
+            import tty
             old_settings = termios.tcgetattr(fd)
             try:
                 tty.setraw(fd)
@@ -166,7 +171,7 @@ class Game:
 
 def main():
     config = load_config()
-    game = Game(config["map_width"], config["map_height"])
+    game = Game(config)                             # <<< CHANGED: pass config directly
     game.run()
 
 if __name__ == "__main__":

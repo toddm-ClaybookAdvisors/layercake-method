@@ -473,6 +473,31 @@ Update the bootstrapping files and logs to reflect the current state of the proj
 [`9c2d1f6`](https://github.com/toddm-ClaybookAdvisors/layercake-method/commit/9c2d1f6) — `chore: move chat and refresh README, chat boot, and prompt index (0024)`
 
 
+## Prompt 0025: Refactor config and version logic to use LAYER throughout the project
+
+Refactor the project to remove all “version” references, replacing them with “layer” across all runtime config, utilities, and rendering.
+
+- Add a `"LAYER"` key to `app/config.json` and update it with each layer commit.
+- Remove `get_version()` and related logic from `utils.py`, replacing with `get_layer()` and a `load_config()` function.
+- Update all affected modules (including `game.py` and `renderer.py`) to use the new `layer` config and logic, so that the current layer is shown in the game overlay.
+- Ensure all file loads use paths relative to the project root.
+
+## Prompt 0026: Add config-driven debug mode that disables fog of war
+
+**Original Prompt:**
+
+feature: add a debug mode. it will be a new line in the config.json. When it is set to true, for now just the fog of war is removed. here are all the source files that may be need to be modified by this change
+
+**Instruction:**
+
+Add a debug mode. Add a `"debug"` boolean to config.json. When `"debug"` is true, fog of war is disabled and the full map is revealed to the player. Pass config to Game and Renderer; use config to control fog logic in rendering. Do not refactor beyond what is needed for this feature. Any constructor or wiring changes required for config-driven fog must be approved as a minimal refactor.
+
+**Result:**
+
+→ See: src/game.py, src/renderer.py, config.json  
+→ Commit: 0026 (Add config-driven debug mode that disables fog of war)
+
+
 
 
 
