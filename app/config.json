@@ -1,8 +1,32 @@
 {
-    "map_width": 50,
+    "_comment_global": "Global game configuration file. Comments using _comment are stripped before use.",
+
+    "map_width": 100,
     "map_height": 50,
+
+    "_comment_viewport": "Viewport sizes affect what is visible to the player, not the actual dungeon size.",
     "viewport_width": 40,
     "viewport_height": 20,
+
     "LAYER": 26,
-    "debug": true
+    "debug": true,
+
+    "map_config": {
+        "_comment": "All procedural generation parameters for mapgen.",
+        "max_rooms": 20,
+        "room_min_size": 4,
+        "room_max_size": 20,
+
+        "_comment_tileset": "Tile symbols used in mapgen and rendering.",
+        "tileset": {
+            "wall": "#",
+            "floor": "."
+        },
+
+        "_comment_seed": "Set to a number for deterministic generation; use null for random.",
+        "seed": null,
+
+        "_comment_connectivity": "Algorithm for connecting rooms: 'default', 'mst', 'all', 'sparse' (future).",
+        "connectivity": "default"
+    }
 }

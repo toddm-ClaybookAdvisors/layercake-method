@@ -43,9 +43,6 @@ The AI acts as **coder, collaborator, and documentarian**.
 - **No emoji or non-ASCII characters.**  
   No emoji or non-ASCII characters are allowed in code, logs, documentation, or any committed files.
 
-- **Devlogs are the only authoritative transcript.**  
-  Devlogs must include the *entire* chat back-and-forth (user and AI), with no code or file outputs—just the pure conversation, in a single markdown code block.
-
 - **No mention, use, or generation of excluded files or directories.**  
   Files or directories specifically excluded from the project must not be referenced, updated, generated, or included in any workflow or artifact.
 
@@ -81,6 +78,43 @@ The AI acts as **coder, collaborator, and documentarian**.
 
 - **Audit/compliance policy.**  
   Any workflow, commit, or artifact deviation from `chat-boot.md` must be reported to the user and logged.
+
+## Iterative Refactor Workflow
+
+- All refactor work must follow the iterative workflow:
+  1. Start refactor with overall goal
+  2. Break goal into individual tasks (base task should make subsequent tasks easier)
+  3. Implement and test a task
+  4. If successful, create a checkpoint commit that will be amended until the refactor is “complete”
+  5. Grab next task and iterate (repeat 3–5)
+  6. When all tasks are done, run a final `git commit --amend` with a complete, unified message for the layer, replacing all checkpoint commit messages.
+
+## Devlog Policy
+
+- For every committed layer, generate a devlog file named `logs/devlog/devlog-XXXX.md`, where `XXXX` is the layer number (zero-padded to four digits).
+- The devlog must include the entire chat transcript for that layer, in strict chronological order.
+- Prefix every message with the sender (`Todd:` for the user, `ai-agent:` for the assistant).
+- Do not include any code blocks, file outputs, or summaries—record only the pure natural language conversation.
+- Present the transcript as a single markdown block.
+- No elisions, no omissions. The devlog is the authoritative record for process audit and future reference.
+
+## Python Comment Style Policy
+
+- All Python code must use standard Python commenting:
+  - File-level/project header comments must be multi-line `#` comments (not HTML or XML).
+  - All function, class, and module documentation must use triple-quoted Python docstrings (`""" ... """`).
+  - Never use HTML-style (`<!-- ... -->`) comments or non-Python conventions in `.py` files.
+
+## JSON `_comment` Uniqueness Policy
+
+- When using `_comment` fields for inline documentation in JSON, all `_comment` keys must be unique at their object level.
+
+## “Remember” Policy
+
+- Any instruction from the user that begins with “remember” must be added to `chat-boot.md` at the next move chat or policy update, including workflow conventions, coding guidelines, or project-specific reminders.
+
+
+
 
 ---
 

@@ -29,6 +29,27 @@ def is_open_tile(game_map, x, y):
 def is_floor(game_map, x, y):
     return 0 <= y < len(game_map) and 0 <= x < len(game_map[0]) and game_map[y][x] == '.'
 
+def strip_json_comments(obj, comment_prefix="_comment"):
+    """
+    Recursively remove all keys starting with the given prefix (default: '_comment')
+    from a loaded JSON dictionary or list.
+
+    Args:
+        obj: The Python object parsed from JSON (dict, list, or primitive).
+        comment_prefix: The key prefix used for comments to strip (default: '_comment').
+
+    Returns:
+        A new object with all comment keys removed.
+    """
+    if isinstance(obj, dict):
+        return {k: strip_json_comments(v, comment_prefix)
+                for k, v in obj.items() if not k.startswith(comment_prefix)}
+    elif isinstance(obj, list):
+        return [strip_json_comments(item, comment_prefix) for item in obj]
+    else:
+        return obj
+
+
 def load_config():
     """
     Loads the configuration from 'app/config.json', using a path
@@ -45,7 +66,8 @@ def load_config():
     config_path = os.path.join(project_root, 'app', 'config.json')
 
     with open(config_path, 'r', encoding='utf-8') as f:
-        config = json.load(f)
+        raw_config = json.load(f)
+        config = strip_json_comments(raw_config)
     return config
 
 def get_layer():

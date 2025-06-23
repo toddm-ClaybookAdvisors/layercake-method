@@ -28,3 +28,6 @@ So, 4.1 does stealth refactors which can seriously mess things up.  I had to add
 
 *note 10*
 Just had the LLM optamize my chat boot, it suggested adding a strict and explicit policy around getting everyting in a single markdown code block.   We'll see how well it works, it's been a pain in the ass and I'm tired of yelling at it whih seems to work.
+
+*note 11* 
+new policy worked really well. Starting to get the hang of more effective prompting.   I have a crazy idea that I'm going to try out.  I've been capturing my chats during every layer created.   Some quite big.  I wan to see if I can do an analysis on them to go from original prompt to optimal prompt for creating the final outcome.  wish me luck

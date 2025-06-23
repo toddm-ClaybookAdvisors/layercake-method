@@ -8,10 +8,10 @@ import os
 import sys
 import time
 import json
-from mapgen import generate_map
+from mapgen import generate_map, place_entity
 from entities import Player, Adversary
 from renderer import Renderer
-from utils import get_terminal_size,is_open_tile, is_floor, load_config
+from utils import get_terminal_size, is_open_tile, is_floor, load_config
 
 if os.name == "nt":
     import msvcrt
@@ -20,10 +20,11 @@ else:
     import tty
 
 class Game:
-    def __init__(self, config):                          # <<< CHANGED: accept config dict directly
+    def __init__(self, config):
         map_width = config["map_width"]
         map_height = config["map_height"]
-        self.map, (px, py), self.exit_pos = generate_map(map_width, map_height)
+        map_config = config.get("map_config", {})
+        self.map, (px, py), self.exit_pos = generate_map(map_width, map_height, map_config)
         self.layer = config["LAYER"]
         self.player = Player(px, py)
         self.messages = []
@@ -36,25 +37,15 @@ class Game:
         self.seen = [[False for _ in range(map_width)] for _ in range(map_height)]
         self._reveal_visible_area()
 
-        # Adversary: spawn far from player
-        ax, ay = self._find_far_spawn(px, py)
+        # Extract floor tile from config for safe adversary placement
+        floor_tile = map_config.get("tileset", {}).get("floor", ".")
+        occupied = {(px, py)}
+        ax, ay = place_entity(self.map, occupied, floor_tile)
         self.adversary = Adversary(ax, ay)
         self.player_slow_counter = 0
 
         self.viewport_width, self.viewport_height = self._get_dynamic_viewport_size()
-        self.renderer = Renderer(config)                  # <<< CHANGED: pass config to Renderer
-
-    def _find_far_spawn(self, px, py):
-        best = (0, 0)
-        max_dist = -1
-        for y in range(len(self.map)):
-            for x in range(len(self.map[0])):
-                if self.map[y][x] == '.':
-                    d = abs(x - px) + abs(y - py)
-                    if d > max_dist:
-                        best = (x, y)
-                        max_dist = d
-        return best
+        self.renderer = Renderer(config)
 
     def _get_dynamic_viewport_size(self):
         term_w, term_h = get_terminal_size()
@@ -171,7 +162,7 @@ class Game:
 
 def main():
     config = load_config()
-    game = Game(config)                             # <<< CHANGED: pass config directly
+    game = Game(config)
     game.run()
 
 if __name__ == "__main__":

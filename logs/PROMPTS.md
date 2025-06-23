@@ -519,6 +519,22 @@ Refactor the `chat-boot.md` to remove any mention of excluded or obsolete files,
 → See: `chat-boot.md`  
 → Commit: 0027 (Major policy, workflow, and compliance refactor; replaces all prior boot policies)
 
+## Prompt 0028: Refactor dungeon map generation for clarity, modularity, and config-driven flexibility
+
+**Original Prompt:**
+
+start refractor layer 28
+
+**Instruction:**
+
+Refactor the dungeon map generation module (`mapgen.py`) for clarity, modularity, and stateless operation. Output the dungeon as a row-major map to ensure correct downstream logic. Integrate a `map_config` section into the global `config.json` for all procedural generation options, supporting custom tilesets and random seed. Update all entity placement logic (player, exit, adversary) to use a robust `place_entity` helper requiring explicit floor tile configuration. Update `game.py` to use the new config-driven interface. Add a utility to `utils.py` to strip `_comment` keys from JSON configs. Guarantee robust and correct spawning regardless of mapgen settings. Document the rationale and conventions directly in code.
+
+**Result:**
+
+→ See: `app/src/mapgen.py`, `app/src/game.py`, `config.json`, `utils.py`  
+→ Commit: 0028 (Refactor dungeon map generation for clarity, modularity, and config-driven flexibility)
+
+
 
 
 
