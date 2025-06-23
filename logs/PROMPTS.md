@@ -497,6 +497,29 @@ Add a debug mode. Add a `"debug"` boolean to config.json. When `"debug"` is true
 → See: src/game.py, src/renderer.py, config.json  
 → Commit: 0026 (Add config-driven debug mode that disables fog of war)
 
+## Prompt 0027: Major chat-boot.md policy refactor and workflow enhancement
+
+**Original Prompt:**
+
+restructure my chat-boot.md file remove any mention of files that are mention as ignored now
+
+**Instruction:**
+
+Refactor the `chat-boot.md` to remove any mention of excluded or obsolete files, consolidate and clarify all explicit rules, and add/enhance policies to ensure:  
+- No refactoring outside of refactor layers  
+- Strict workflow step enforcement and state visibility  
+- State transition and workflow completeness reminders  
+- File header standards with model, layer, and purpose  
+- Session definition, audit/compliance, and layer number management  
+- A manual edit detection and review flow before commit  
+- An improved `merge` step that requires both README.md updates (if merging to main) and a current `git log --oneline` for LAYER_INDEX.md commit hashes.
+
+**Result:**
+
+→ See: `chat-boot.md`  
+→ Commit: 0027 (Major policy, workflow, and compliance refactor; replaces all prior boot policies)
+
+
 
 
 

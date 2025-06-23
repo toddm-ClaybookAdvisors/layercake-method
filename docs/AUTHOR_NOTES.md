@@ -25,3 +25,6 @@ After the last refactor I'm going to rethink the project structure PROMTS.md and
 
 *note 9*
 So, 4.1 does stealth refactors which can seriously mess things up.  I had to add explict instructions to not refactor unless asked to, then it went too far and couldn't actually make necessary changes because they were a refactor.   So I loosened it a bit.   I may have to find a tight definition of refacor to include in the boot prompt.
+
+*note 10*
+Just had the LLM optamize my chat boot, it suggested adding a strict and explicit policy around getting everyting in a single markdown code block.   We'll see how well it works, it's been a pain in the ass and I'm tired of yelling at it whih seems to work.
