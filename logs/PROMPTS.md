@@ -534,6 +534,22 @@ Refactor the dungeon map generation module (`mapgen.py`) for clarity, modularity
 → See: `app/src/mapgen.py`, `app/src/game.py`, `config.json`, `utils.py`  
 → Commit: 0028 (Refactor dungeon map generation for clarity, modularity, and config-driven flexibility)
 
+## Prompt 0029: Refactor entity system for modularity, readability, and hallway robustness
+
+**Original Prompt:**
+
+we will be refactoring the entity modularization and readability
+
+**Instruction:**
+
+Restructure the `entities.py` module to maximize modularity and readability. Refactor the adversary AI to use intent-driven helper methods (lock-on, hallway movement, exploration, random fallback), replace grid math with the `adjacent_tiles` helper, and ensure all navigation and state updates are cleanly separated. Fix the edge case where adversaries spawned in hallways could become stuck due to an unset movement direction. Do not alter any gameplay features or interfaces.
+
+**Result:**
+
+→ See: `app/src/entities.py`  
+→ Commit: 0029 (Refactor entity system for clarity and maintainability; modular adversary AI; hallway bug fix)
+
+
 
 
 
