@@ -549,6 +549,13 @@ Restructure the `entities.py` module to maximize modularity and readability. Ref
 → See: `app/src/entities.py`  
 → Commit: 0029 (Refactor entity system for clarity and maintainability; modular adversary AI; hallway bug fix)
 
+## Prompt 0030
+
+**Instruction:**  
+Update the debug output system to use Python’s built-in `logging` module, with configuration driven by the `debug` flag in `config.json`. Logging should be initialized at startup, write to a single `debug.log` file at the project root (overwritten on each run), and be non-spammy—logging only major game events, transitions, and errors in `renderer.py`, `mapgen.py`, and `game.py`.
+
+**Original Prompt:**  
+Layer 30 - update debug mode
 
 
 

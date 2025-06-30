@@ -6,6 +6,7 @@
 
 import random
 from collections import deque
+import logging
 
 # Define the four directions for adjacent movement (up, down, left, right)
 DIRECTIONS = [(1, 0), (-1, 0), (0, 1), (0, -1)]
@@ -96,15 +97,11 @@ class Adversary(AdversaryBase):
             3. Explore any adjacent, unexplored floor tiles.
             4. Move randomly if no other options.
         """
-        print(f"Adversary at ({self.x},{self.y}), attempting move...")
         if self.try_lock_on_to_player(game, player_trail, player_pos, is_floor, add_message):
-            print("try_lock_on_to_player SUCCESS")
             return
         if self.try_follow_hallway(game, is_floor):
-            print("try_follow_hallway SUCCESS")
             return
         if self.try_explore_unexplored(game, is_floor):
-            print("try_explore_unexplored SUCCESS")
             return
         self.step_randomly(game, is_floor)
 
@@ -247,11 +244,11 @@ class Adversary(AdversaryBase):
     def step_randomly(self, game, is_floor):
         neighbors = [n for n in adjacent_tiles(self.x, self.y) if is_floor(game.map, *n)]
         if not neighbors:
-            print("Adversary is trapped, no valid moves.")
+            logging.debug("Adversary is trapped, no valid moves.")
             return
         random.shuffle(neighbors)
         chosen = neighbors[0]
-        print(f"step_randomly: moving from ({self.x}, {self.y}) to {chosen}")
+        logging.debug(f"step_randomly: moving from ({self.x}, {self.y}) to {chosen}")
         self.move_to(*chosen)
         self.mode = "explore"
 
@@ -260,7 +257,6 @@ class Adversary(AdversaryBase):
         """
         Move the adversary to (x, y) and update state.
         """
-        print(f"move_to: from ({self.x},{self.y}) to ({x},{y})")
         self.last_dir = (x - self.x, y - self.y)
         self.x, self.y = x, y
         self.trail.add((x, y))

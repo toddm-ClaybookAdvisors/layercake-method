@@ -5,6 +5,7 @@
 # Purpose:
 #   - Set up local dev session
 #   - Prepend ./bin to PATH
+#   - Add ./app/src to PYTHONPATH (fixes local imports)
 #   - Start a Poetry-managed shell environment
 #   - Customize the shell prompt to show your preferred name
 # Usage:
@@ -17,15 +18,16 @@ if [[ "$ZSH_EVAL_CONTEXT" != *:file ]]; then
   return 1 2>/dev/null || exit 1
 fi
 
-echo "[1/3] Adding ./bin to PATH"
+echo "[1/4] Adding ./bin to PATH"
 export PATH="./bin:$PATH"
 
-echo "[2/3] Launching Poetry shell"
+echo "[2/4] Adding ./app/src to PYTHONPATH"
+export PYTHONPATH="./app/src:$PYTHONPATH"
+
+echo "[3/4] Launching Poetry shell"
 poetry shell
 
 # --- (Optional) Override the prompt for aesthetic purposes ---
-# Note: This line executes *after* poetry shell only if run interactively inside the current shell
-# You may not see this take effect if poetry shell spawns a new shell process
 #export PS1="(game) $PS1"
 
-echo "[3/3] Dev session ready."
+echo "[4/4] Dev session ready."

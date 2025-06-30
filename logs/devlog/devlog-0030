@@ -1,0 +1,70 @@
+# Devlog for Layer 30
+
+## Layer Purpose and Scope
+
+The purpose of Layer 30 was to overhaul and professionalize the debug output system across the project. The previous workflow used raw `print()` statements, which polluted the display, caused rendering artifacts, and did not respect a unified debug flag. This layer migrated all debug output to Python's built-in `logging` module, centralized in `utils.py`, with logging setup controlled by the `debug` flag in `config.json`.
+
+## Implementation Details
+
+### Logging Infrastructure
+
+- Introduced a `setup_logger()` function in `utils.py` that configures logging on game start.
+    - Logs are written to `debug.log` at the project root.
+    - The log file is overwritten (`mode='w'`) on each game run.
+    - The log format includes timestamp, module, and function.
+    - The logger respects the `debug` flag in `config.json` and only writes DEBUG/INFO output when enabled.
+
+- `.gitignore` updated to exclude `debug.log` at the project root to prevent accidental commit of debug logs.
+
+### Refactoring Print Statements
+
+- All previous debug `print()` statements in the codebase were systematically replaced with `logging.debug()` or, for major events, `logging.info()` or `logging.warning()`, depending on severity and context.
+
+### High-Value Logging (Renderer, Mapgen, Game)
+
+- **`renderer.py`:**
+    - Logs only rare events such as viewport hitting the map edge, or out-of-bounds errors. No per-frame or per-tile logs.
+    - Periodic summary logs (if any) are throttled, e.g., every 100 ticks, but this can be turned off for minimal noise.
+- **`mapgen.py`:**
+    - Logs the start and completion of map generation, including parameters and seed.
+    - Logs when rooms are skipped due to collision, when start/exit is off-floor, and when entity placement fails.
+    - Logs the actual random seed used (user-provided or generated).
+- **`game.py`:**
+    - Logs game start (config, layer, and map parameters), all major lifecycle events (player/adversary spawn, win/loss, quit), and adversary placement errors.
+    - Invalid input and user-initiated quit/cancel events are logged.
+    - Only logs key transitions or errors, never per-frame or per-command unless they're critical.
+
+### Workflow/Project Adjustments
+
+- Added logic to the development shell script to ensure `app/src` is in `PYTHONPATH`, guaranteeing correct import resolution for all dev tools and scripts.
+- Double-checked that all configuration is driven from `config.json` when the game is run via `game.py` (main entrypoint).
+- Clarified that `mapgen.py` should **not** independently load `config.json`; all config flows through the main application.
+
+## Testing and Validation
+
+- Manually tested gameplay with `debug: true` and `debug: false` in `config.json`.
+    - Confirmed logs are present and detailed only in debug mode.
+    - Observed that `debug.log` is overwritten (not appended) on each run.
+    - Verified that routine gameplay, including hundreds of moves, does **not** spam the log.
+    - Confirmed only significant events (start, quit, win, loss, error, rare conditions) appear in the log.
+- Used `tail -f debug.log` during gameplay to observe log density in real time.
+- Confirmed no `debug.log` is committed to Git.
+
+## Issues Encountered
+
+- Initially, there were import path issues for `utils.py` when running from different shell environments. This was resolved by updating the shell script to set `PYTHONPATH` and ensuring correct import style.
+- Early attempts at logging in `renderer.py` and `game.py` produced too much log output; this was tuned iteratively, and only a handful of critical messages remain.
+- Confirmed that config loading and logger setup always occur before any logging calls.
+
+## Lessons and Workflow Improvements
+
+- Centralizing logging configuration in `utils.py` and respecting `config.json` made future maintenance much easier and the codebase more professional.
+- Explicitly excluding `debug.log` in `.gitignore` prevented accidental log spam in the repo.
+- The use of high-value, low-frequency logs means future debugging will be more efficient, and performance is not impacted.
+- Reinforced the pattern that only the entrypoint/main code should handle config loading.
+
+## Future Recommendations
+
+- As features expand, developers should continue to favor INFO/WARNING/ERROR logs for transitions, errors, and events of real interest.
+- Debug-level logs should only be used for truly hard-to-diagnose or rare state transitions, and never for per-frame or per-action routine reporting.
+- Always test log output in real gameplay, not just in isolated scripts.
