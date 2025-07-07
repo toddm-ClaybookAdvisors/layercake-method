@@ -92,12 +92,10 @@ The AI acts as **coder, collaborator, and documentarian**.
 
 ## Devlog Policy
 
-- For every committed layer, generate a devlog file named `logs/devlog/devlog-XXXX.md`, where `XXXX` is the layer number (zero-padded to four digits).
-- The devlog must include the entire chat transcript for that layer, in strict chronological order.
-- Prefix every message with the sender (`Todd:` for the user, `ai-agent:` for the assistant).
-- Do not include any code blocks, file outputs, or summaries—record only the pure natural language conversation.
-- Present the transcript as a single markdown block.
-- No elisions, no omissions. The devlog is the authoritative record for process audit and future reference.
+- For every committed layer, output a devlog file named `logs/devlog/devlog-XXXX.md`, where `XXXX` is the layer number (zero-padded to four digits).
+
+- Output the entire conversation in strict message order, with each message labeled ‘Todd:’ or ‘ai-agent:’, with no summaries, no code, no file outputs, no markdown except the single outer code block. The output must be one continuous markdown code block only—no text or markdown outside it. If the answer is not in one code block, this is a failed run.
+
 
 ## Python Comment Style Policy
 

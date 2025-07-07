@@ -557,6 +557,28 @@ Update the debug output system to use Python’s built-in `logging` module, with
 **Original Prompt:**  
 Layer 30 - update debug mode
 
+## Prompt 0031: Optimize adversary AI to prioritize hallways and avoid exit
+
+**Original Prompt:**
+
+I am planning on improving the Adversary's AI  
+Make the AI use a more effective strategy of finding the player than trying to explore every un explored tile.  
+The adversary cannot detect the player's position until it finds the player's trail.  Optamize the adversary's search strategy for finding the player's trail.  
+for this layer treat the player's trail as any tile currently marked as visited by the player.  
+Upgrade the intelligence of the Adversary as you see fit  
+it's still doing an exhaustive search and missing opportunities to take a hallway.   A hallway that is a single tile wide is the most likely place to find the player's trail  
+Start with making hallway search top priority.  We'll iterate from there  
+Fix one bug.   When the Aversary encounters the door, it overwrites it.
+
+**Instruction:**
+
+Upgrade the Adversary AI so it uses a frontier-based search that prioritizes unexplored hallways over other frontiers when searching for the player's trail, and fixes a bug that caused the Adversary to overwrite the exit/door tile. The adversary cannot detect the player's position until it finds the trail (tiles visited by the player). The AI now avoids stepping onto the exit tile in all movement logic.
+
+**Result:**
+
+→ See: `app/src/entities.py`  
+→ Commit: 0031 (optimized adversary AI, hallway search priority, exit-overwrite bugfix)
+
 
 
 

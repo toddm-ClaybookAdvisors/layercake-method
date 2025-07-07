@@ -31,3 +31,6 @@ Just had the LLM optamize my chat boot, it suggested adding a strict and explici
 
 *note 11* 
 new policy worked really well. Starting to get the hang of more effective prompting.   I have a crazy idea that I'm going to try out.  I've been capturing my chats during every layer created.   Some quite big.  I wan to see if I can do an analysis on them to go from original prompt to optimal prompt for creating the final outcome.  wish me luck
+
+*note 12* 
+I think I finally nailed the prompt to "output" ot "generate" the devlog.  Apparently "generate" leaves too much up to interpreatation.  "output" is explicit.  We'll see.
