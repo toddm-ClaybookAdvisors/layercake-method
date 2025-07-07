@@ -5,11 +5,11 @@
     "map_height": 50,
 
     "_comment_viewport": "Viewport sizes affect what is visible to the player, not the actual dungeon size.",
-    "viewport_width": 40,
-    "viewport_height": 20,
+    "viewport_width": 100,
+    "viewport_height": 50,
 
-    "LAYER": 31,
-    "debug": false,
+    "LAYER": 32,
+    "debug": true,
 
     "map_config": {
         "_comment": "All procedural generation parameters for mapgen.",

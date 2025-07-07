@@ -579,6 +579,38 @@ Upgrade the Adversary AI so it uses a frontier-based search that prioritizes une
 → See: `app/src/entities.py`  
 → Commit: 0031 (optimized adversary AI, hallway search priority, exit-overwrite bugfix)
 
+## Prompt 0032: Add adversary/door protection unit tests
+
+**Original Prompt:**
+
+refactor: in the previous layer, behavior was introduced to keep the adversary from overwriting the door tile. Create a unit test for this correct behavior.
+(add all suggested edge case tests for adversary movement and doors.)
+
+**Instruction:**
+
+Implement comprehensive pytest-based unit tests for the Adversary, verifying that it never moves onto or overwrites any door (`'0'`) tile under any movement logic. Cover multiple doors, being surrounded by doors, map edge cases, blocked movement, and “locked on” trail-following behavior.
+
+**Result:**
+
+→ See: app/src/test_entities.py  
+→ Commit: 0032 (Added comprehensive adversary/door protection test suite in test_entities.py)
+
+## Prompt 0033: Add player attributes and switch to curses rendering
+
+**Original Prompt:**
+
+I want to introduce new game elements, please give me 5 suggestions that will fit in a single layer... [Full dialogue includes: request for player attributes, health/speed/vision_radius, integration, rendering player stats, move from print to curses, full code for curses-based renderer and input.]
+
+**Instruction:**
+
+Introduce core player attributes (health, speed, vision_radius) for roguelike extensibility, and refactor both rendering and main game loop to use Python curses. Player stats are always displayed under the overlay; the entire HUD, map, controls, and messages are now rendered with curses. All player movement/input (WASD/Q) is handled in real time, in-terminal, via curses keypresses.
+
+**Result:**
+
+→ See: app/src/entities.py, app/src/renderer.py, app/src/game.py  
+→ Commit: 0033 (add player attributes; curses-based renderer and input)
+
+
 
 
 
