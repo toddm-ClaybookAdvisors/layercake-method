@@ -610,6 +610,25 @@ Introduce core player attributes (health, speed, vision_radius) for roguelike ex
 → See: app/src/entities.py, app/src/renderer.py, app/src/game.py  
 → Commit: 0033 (add player attributes; curses-based renderer and input)
 
+Certainly. Here is the **PROMPTS.md** entry for Layer 34, strictly following your required format:
+
+
+## Prompt 0034: Add invisible noise traps and adversary direct pursuit
+
+**Original Prompt:**
+
+Add traps that if hit will give the location of closest piece of the player's trail to the adversary
+
+**Instruction:**
+
+Add invisible noise traps to the dungeon. When the player steps on a trap, it becomes visible and a HUD alert is shown. The adversary is alerted to the player’s exact position at the time of triggering and will pathfind directly to that location before resuming normal AI.
+
+**Result:**
+
+→ See: app/src/entities.py, app/src/renderer.py, app/src/game.py, app/config.json
+→ Commit: 0034 (add noise traps, adversary pursues last-known player position, trap/door rendering fix)
+
+
 
 
 
