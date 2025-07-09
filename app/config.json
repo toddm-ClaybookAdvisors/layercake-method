@@ -8,8 +8,8 @@
     "viewport_width": 100,
     "viewport_height": 50,
 
-    "LAYER": 34,
-    "debug": true,
+    "LAYER": 35,
+    "debug": false,
 
     "map_config": {
         "_comment": "All procedural generation parameters for mapgen.",

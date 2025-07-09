@@ -628,6 +628,26 @@ Add invisible noise traps to the dungeon. When the player steps on a trap, it be
 → See: app/src/entities.py, app/src/renderer.py, app/src/game.py, app/config.json
 → Commit: 0034 (add noise traps, adversary pursues last-known player position, trap/door rendering fix)
 
+## Prompt 0035: Replace adversary “lock on” with true trail-following (stepwise, no stuck/shortcutting)
+
+**Original Prompt:**
+
+Remove the ability for the adversary to "lock on" when it finds the player's trail, it will not know the player's location, but stay on the trail until it finds the player.
+
+**Instruction:**
+
+Replace the adversary’s “lock on” mechanic with canonical stepwise trail-following:  
+- The adversary never targets or knows the player’s actual location except when alerted by a noise trap.  
+- When the adversary is on a trail tile, it will always attempt to step to an adjacent tile that is also part of the trail, proceeding step by step along the path left by the player.  
+- At forks or branches, it picks a direction (randomly or by unexplored status).  
+- If the adversary cannot advance further along the trail (dead end or loop), it reverts to standard AI search.  
+- The player’s `trail_order` is maintained for adversary logic; no code elsewhere is changed.  
+- All previous “lock on” or pathfinding-to-player logic is removed.
+
+**Result:**
+
+→ See: app/src/entities.py  
+→ Commit: 0035 (Adversary now follows player’s trail stepwise, unsticking at dead ends; no lock-on; Player maintains trail_order.)
 
 
 
