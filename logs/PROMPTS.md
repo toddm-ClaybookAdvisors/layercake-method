@@ -649,6 +649,22 @@ Replace the adversary’s “lock on” mechanic with canonical stepwise trail-f
 → See: app/src/entities.py  
 → Commit: 0035 (Adversary now follows player’s trail stepwise, unsticking at dead ends; no lock-on; Player maintains trail_order.)
 
+## Prompt 0036: Noise traps scale, adversary pursues alert, reveal only on adversary trap, instant collision loss
+
+**Original Prompt:**
+Increase the number of noise traps in general and in relation to the size of the map, when a noise trap is triggered, it also reveals the location of the adversary for as many tics as the adversary can see the player  
+If the adversary is off screen display a large red arrow pointing to the adversary's general direction  
+change it so the adversary is visible for 3 ticks when they hit a noise trap.  They are no longer visible when the player hits one  
+the adversary no longer chases me.    Every time the player hit's a noise trap the adversary should remember and move in that direction until it reaches it or a new noise trap is stepped on by the player  
+The adversary just went over me without "catching me"  
+
+**Instruction:**
+Increase the number of noise traps so their count scales with map size. When the player triggers a noise trap, the adversary is alerted to that position and will actively pursue it until reached or until a new trap is triggered, at which point the alert is updated. When the adversary triggers a noise trap, its location is revealed to the player for exactly 3 ticks, with a directional arrow displayed if the adversary is offscreen. The game ends immediately whenever the player and adversary occupy the same tile, regardless of movement order.
+
+**Result:**
+→ See: `app/src/entities.py`, `app/src/game.py`, `app/src/renderer.py`
+→ Commit: 0036 (Increase the number of noise traps and update their mechanics)
+
 
 
 
