@@ -1,15 +1,113 @@
 {
     "_comment_global": "Global game configuration file. Comments using _comment are stripped before use.",
 
-    "map_width": 50,
-    "map_height": 50,
+    "map_width": 200,
+    "map_height": 200,
 
     "_comment_viewport": "Viewport sizes affect what is visible to the player, not the actual dungeon size.",
     "viewport_width": 100,
     "viewport_height": 50,
 
-    "LAYER": 36,
+    "LAYER": 37,
     "debug": false,
+
+    "_comment_entities": "Entity configuration including player and adversary attributes.",
+    "entities": {
+        "player": {
+            "health": 3,
+            "speed": 1,
+            "vision_radius": 3,
+            "max_health": 3
+        },
+        "adversary": {
+            "vision_radius": 2,
+            "pathfinding_max_distance_near": 10,
+            "pathfinding_max_distance_far": 15,
+            "reveal_duration_ticks": 3
+        }
+    },
+
+    "_comment_gameplay": "Core gameplay mechanics and timing configuration.",
+    "gameplay": {
+        "player_vision_reveal_radius": 2,
+        "trail_slowdown_duration": 1,
+        "trap_placement": {
+            "min_ratio_divisor": 50,
+            "max_ratio_divisor": 25,
+            "min_absolute": 5,
+            "max_absolute": 10
+        }
+    },
+
+    "_comment_characters": "Visual character representations for all game elements.",
+    "characters": {
+        "player": "†",
+        "adversary": "X",
+        "trap": "T",
+        "exit": "0",
+        "trail_player": "·",
+        "trail_adversary": "·",
+        "alert_marker": "!",
+        "empty": " ",
+        "direction_arrows": {
+            "N": "↑",
+            "NE": "↗",
+            "E": "→",
+            "SE": "↘",
+            "S": "↓",
+            "SW": "↙",
+            "W": "←",
+            "NW": "↖"
+        }
+    },
+
+    "_comment_colors": "Color pair assignments for curses rendering.",
+    "colors": {
+        "bold_red": 1,
+        "green": 2,
+        "trap": 3,
+        "alert": 4,
+        "arrow": 5
+    },
+
+    "_comment_ui": "User interface text and control mappings.",
+    "ui": {
+        "controls_text": "Controls: W/A/S/D = move   Q = quit",
+        "messages": {
+            "invalid_input": "Invalid input! Use W/A/S/D to move, Q to quit.",
+            "cannot_walk": "You can't walk there.",
+            "goodbye": "Goodbye!",
+            "noise_trap_player": "You've hit a noise trap. The adversary is coming for you!",
+            "noise_trap_adversary": "The adversary triggered a noise trap! Its location is revealed for 3 ticks.",
+            "trail_slowdown": "You are slowed by the adversary's trail!",
+            "victory": "You found the exit! Congratulations!",
+            "defeat": "You lose! The adversary caught you!"
+        },
+        "stats_format": "Health: {health}   Speed: {speed}   Vision: {vision_radius}",
+        "overlay_format": "Layer: {layer}   Tick: {tick}   FPS: {fps}   Pos: ({x}, {y})"
+    },
+
+    "_comment_input": "Input key mappings and movement directions.",
+    "input": {
+        "movement_keys": {
+            "up": ["w", "W"],
+            "down": ["s", "S"],
+            "left": ["a", "A"],
+            "right": ["d", "D"]
+        },
+        "special_keys": {
+            "quit": ["q", "Q"]
+        },
+        "directions": {
+            "cardinal": [
+                [1, 0], [-1, 0], [0, 1], [0, -1]
+            ],
+            "all": [
+                [0, -1], [1, -1], [1, 0], [1, 1],
+                [0, 1], [-1, 1], [-1, 0], [-1, -1]
+            ]
+        }
+    },
 
     "map_config": {
         "_comment": "All procedural generation parameters for mapgen.",
