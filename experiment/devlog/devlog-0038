@@ -1,0 +1,64 @@
+I kept this one brief because it was massive
+
+# Devlog — Layer 0038
+
+**Date:** 2025-07-13  
+**Session Duration:** ~4h (12:00 PM – 4:00 PM CST)  
+**Human:** Todd  
+**ai-agent:** Architect-Laboratory Partner (GPT-4o)
+
+---
+
+## Session Focus
+
+**Main Purpose:**  
+Transitioned the project to a **pair programming model using GPT-4o (as Architect/Laboratory Assistant) and Claude (as Reviewer/Refactorer)**.  
+The workflow, persona, and protocol for each AI partner are now cleanly separated and will be developed in tandem in future layers.
+
+---
+
+## Key Events & Decisions
+
+- **Replaced per-layer artifact folders** with a Git-native structure: each commit is now a “layer.”
+- **Established `experiment/protocol/`** as the new home for all workflow, persona, directive, and prompt-template stubs—**to be filled in during the next session**.
+- **Preserved devlogs** under `experiment/devlog/` and set policy to continue full session logging.
+- **Maintained author notes** in `experiment/AUTHOR_NOTES.md` for historical context.
+- **Committed to using structured, JSON-rich commit messages** for all future layers, maximizing both human and machine readability.
+
+---
+
+## Troubleshooting & Technical Highlights
+
+- Migrated all files and folders using a migration script (with dry run and destructive modes).
+- Addressed issues with file restoration, Git staging/unstaging, and correct handling of devlogs and author notes.
+- Resolved VS Code icon meanings and clarified status of untracked, staged, and clean files.
+- Corrected misuse of `git mv` to ensure all file moves preserved history and did not overwrite critical artifacts.
+- Updated documentation on Markdown and code block formatting for both VS Code and GitHub preview.
+
+---
+
+## Next Steps
+
+- **All protocol, persona, workflow, and template files are currently stubs.**
+  - **Next session (Layer 0039):** Fill in the full content and onboarding for both the GPT-4o and Claude roles, including detailed workflow, persona, and policy definitions.
+- **Continue per-layer devlog generation and author note preservation.**
+- Update all onboarding and process documentation to reflect and explain the dual-AI, pair programming methodology.
+
+---
+
+## Rationale
+
+This session marks a fundamental shift:
+- **From monolithic or chat-centric LLM development to a reproducible, modular “pair programming” experiment** with distinct AI roles.
+- Structure is now optimized for layered audit, future automation, and easy onboarding of new AI or human collaborators.
+
+---
+
+**Session Result:**  
+**Project is now ready for dual-AI, pair programming. All process and policy files are prepared as stubs.  
+Filling them in will be the focus of the next layer.  
+Devlogs and author notes are preserved for a transparent audit trail.**
+
+---
+
+*End of Devlog — Layer 0038*
