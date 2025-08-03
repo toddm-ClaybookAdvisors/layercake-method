@@ -46,3 +46,5 @@ Trying out Claude, the code is *much* better, but the token limits on even the p
 *note 14* 
 Creating a script to generate the layer index was a complete asswhip, natalie is pissed and I've been at this for over 7 hours.
 One thing I did learn though is that if you have an LLM (at least Claude) generate the output file you're trying to write a script to output, then ask it to write the script, it's way better at writting the script
+
+

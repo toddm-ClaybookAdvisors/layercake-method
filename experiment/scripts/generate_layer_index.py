@@ -47,7 +47,6 @@ def get_commits():
             "body": body,
             "date": date
         })
-    
     return commits
 
 def extract_layer_json(commit):
@@ -237,6 +236,7 @@ def build_index(commits):
         summary_col = f"{e['summary']:<47}"
         
         md.append(f"| {layer_col} | {duration_col} | {date_col} | {summary_col} | {sha_url} | {devlog_link} | {json_link} |")
+
 
     # JSON blocks section - remove since we're linking to GitHub instead
     # md.append("\n---\n\n## Layer JSON Blocks\n")

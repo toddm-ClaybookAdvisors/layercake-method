@@ -52,3 +52,4 @@ This index provides a layer-by-layer audit trail for the entire experiment.
 | 00N/A |          | 2025-06-22 | Add config-driven debug mode that disables fo... | [50d8c66](../../../commit/50d8c66fd502dd58d8e9e022b5e2fcbe3db6b6ba) |  |  |
 | 00N/A |          | 2025-07-07 | Add core player attributes and full curses-ba... | [28dbd47](../../../commit/28dbd471d4a11a0cb4af21b32f2a30188ce496ce) |  |  |
 | 00N/A |          | 2025-07-07 | Add core player attributes and full curses-ba... | [f4b92a1](../../../commit/f4b92a1411252e21e987e0db2a88c07d86aa3d73) |  |  |
+
