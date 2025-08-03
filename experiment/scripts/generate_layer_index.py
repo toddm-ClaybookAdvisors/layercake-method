@@ -13,23 +13,40 @@ from datetime import datetime
 OUTPUT_PATH = "experiment/LAYER_INDEX.md"
 
 def get_commits():
-    """Get all commits with their SHA, subject, and body."""
-    log_format = "%H%n%s%n%b%n----END----"
+    """Get all commits with their SHA, subject, body, and commit date."""
+    # Get commits with date included - use ISO format for consistency
+    log_format = "%H|%ad|%s"
     result = subprocess.run(
-        ["git", "log", "--reverse", "--pretty=format:" + log_format],
+        ["git", "log", "--reverse", "--date=short", "--pretty=format:" + log_format],
         capture_output=True, text=True, check=True
     )
-    raw = result.stdout.strip().split("----END----\n")
+    
     commits = []
-    for block in raw:
-        lines = block.strip().split("\n")
-        if len(lines) < 2:
-            continue  # At least SHA and subject required
-        sha = lines[0]
-        subject = lines[1]
-        body_lines = lines[2:] if len(lines) > 2 else []
-        body = "\n".join(body_lines)
-        commits.append({"sha": sha, "subject": subject, "body": body})
+    for line in result.stdout.strip().split('\n'):
+        if '|' not in line:
+            continue
+            
+        parts = line.split('|', 2)
+        if len(parts) < 3:
+            continue
+            
+        sha = parts[0]
+        date = parts[1]  # This will be in YYYY-MM-DD format
+        subject = parts[2]
+        
+        # Get body separately
+        body_result = subprocess.run(
+            ["git", "log", "--format=%b", "-1", sha],
+            capture_output=True, text=True, check=True
+        )
+        body = body_result.stdout.strip()
+        
+        commits.append({
+            "sha": sha, 
+            "subject": subject, 
+            "body": body,
+            "date": date
+        })
     return commits
 
 def extract_layer_json(commit):
@@ -144,7 +161,7 @@ def build_index(commits):
 
         # Check for JSON metadata
         json_data = extract_layer_json(c)
-        date = ""
+        date = c.get('date', '')     # ← THIS IS THE FIX
         json_ref = ""
         json_block = None
         
@@ -205,11 +222,21 @@ def build_index(commits):
     # Table rows
     for e in entries:
         sha_short = e['sha'][:7]
-        sha_url = f"[{sha_short}](https://github.com/toddm-ClaybookAdvisors/layercake-method/commit/{e['sha']})"
+        # Use relative GitHub links that work when viewing on GitHub
+        # LAYER_INDEX.md is at experiment/LAYER_INDEX.md, so need to go up to repo root
+        sha_url = f"[{sha_short}](../../../commit/{e['sha']})"
         devlog_link = f"[{os.path.basename(e['devlog'])}]({e['devlog']})" if e['devlog'] else ""
+        # Make JSON link relative to GitHub as well
         json_link = f"[JSON]({e['json_ref']})" if e['json_ref'] else ""
         
-        md.append(f"| {e['layer']:>05} | {e['duration']:<8} | {e['date']:<10} | {e['summary']:<47} | {sha_url} | {devlog_link} | {json_link} |")
+        # Ensure consistent spacing and no weird paths
+        layer_col = f"{e['layer']:>05}"
+        duration_col = f"{e['duration']:<8}"
+        date_col = f"{e['date']:<10}"
+        summary_col = f"{e['summary']:<47}"
+        
+        md.append(f"| {layer_col} | {duration_col} | {date_col} | {summary_col} | {sha_url} | {devlog_link} | {json_link} |")
+
 
     # JSON blocks section - remove since we're linking to GitHub instead
     # md.append("\n---\n\n## Layer JSON Blocks\n")
@@ -223,47 +250,35 @@ def build_index(commits):
     return "\n".join(md)
 
 def main():
+    print("Getting commits...")
     commits = get_commits()
+    print(f"Found {len(commits)} commits")
     
-    # Get actual commit dates using git log
-    log_result = subprocess.run(
-        ["git", "log", "--reverse", "--pretty=format:%H|%ci"],
-        capture_output=True, text=True, check=True
-    )
+    # Debug: Print first few commits to verify date extraction
+    print("\nFirst 5 commits:")
+    for commit in commits[:5]:
+        print(f"  {commit['sha'][:7]} | '{commit['date']}' | {commit['subject'][:50]}...")
     
-    # Create SHA -> date mapping
-    date_map = {}
-    for line in log_result.stdout.strip().split('\n'):
-        if '|' in line:
-            sha, date_str = line.split('|', 1)
-            # Parse date and format as "Mon DD"
-            try:
-                dt = datetime.fromisoformat(date_str.split(' ')[0])
-                formatted_date = dt.strftime("%b %d")
-                date_map[sha] = formatted_date
-            except:
-                date_map[sha] = ""
+    print("\nLast 5 commits:")
+    for commit in commits[-5:]:
+        print(f"  {commit['sha'][:7]} | '{commit['date']}' | {commit['subject'][:50]}...")
     
-    # Add dates to commits
-    for commit in commits:
-        commit['date'] = date_map.get(commit['sha'], '')
+    # Check for any empty dates
+    empty_dates = [c for c in commits if not c['date']]
+    if empty_dates:
+        print(f"\nWARNING: {len(empty_dates)} commits have empty dates")
+        for c in empty_dates[:3]:
+            print(f"  {c['sha'][:7]} | EMPTY | {c['subject'][:50]}...")
+    else:
+        print("\nAll commits have dates!")
     
+    print("\nBuilding index...")
     md = build_index(commits)
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     with open(OUTPUT_PATH, "w") as f:
         f.write(md)
     
     print(f"LAYER_INDEX.md generated with {len(commits)} commits.")
-    
-    # Print summary stats
-    layer_counts = {}
-    for commit in commits:
-        full_message = commit["subject"] + "\n" + commit["body"] if commit["body"] else commit["subject"]
-        layer, _, _ = parse_layer_and_duration(commit["subject"], full_message)
-        layer_key = layer if layer else "N/A"
-        layer_counts[layer_key] = layer_counts.get(layer_key, 0) + 1
-    
-    print(f"Layer distribution: {dict(sorted(layer_counts.items()))}")
 
 if __name__ == "__main__":
     main()

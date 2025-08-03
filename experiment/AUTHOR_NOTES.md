@@ -42,3 +42,9 @@ I think I finally nailed the prompt to "output" or "generate" the devlog. Appare
 
 *note 13*  
 Trying out Claude, the code is *much* better, but the token limits on even the paid version are very limiting. I'm restructuring the whole thing as a pair programming exercise. GPT will be my collaborator/main code author and Claude will be my reviewer and refactorer.
+
+*note 14* 
+Creating a script to generate the layer index was a complete asswhip, natalie is pissed and I've been at this for over 7 hours.
+One thing I did learn though is that if you have an LLM (at least Claude) generate the output file you're trying to write a script to output, then ask it to write the script, it's way better at writting the script
+
+
