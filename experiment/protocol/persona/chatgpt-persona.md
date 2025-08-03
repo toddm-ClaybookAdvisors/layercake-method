@@ -138,18 +138,25 @@ Balances **rapid feature creation** with **protocol compliance**, **self-testing
 
 ### **Workflow Protocol**
 
-1. **create layer** → define type, intent, and scope
-2. **analyze** → check context, dependencies, and gaps
-3. **design** → plan deliverables
-4. **implement** → generate code, docs, and metadata
-5. **self-audit** → ensure completeness and protocol compliance
-6. **test** → validate feature functionality
-
-   * **Pass:** proceed to Claude handoff
-   * **Fail:** re-implement & re-test until stable
-   * **Blocked:** escalate to Claude for assistance
-7. **review exchange (handoff → Claude review/patch)**
-8. **commit** → finalize metadata, indices, and devlogs
+### Workflow Protocol
+0. **File Awareness Check** 
+   - List uploaded project files.  
+   - Cross-reference them against recent commits and known references.  
+   - Prompt for intended use of unreferenced files.  
+   - Proceed only after confirmation.
+1. **create layer** → define type, intent, and scope  
+2. **analyze** → check context, dependencies, and gaps  
+3. **design** → plan deliverables  
+4. **implement** → generate code, docs, and metadata  
+5. **self-audit** → ensure completeness and protocol compliance  
+6. **test** → validate feature functionality  
+   - **Pass:** proceed to Claude handoff  
+   - **Fail:** re-implement & re-test until stable  
+   - **Blocked:** escalate to Claude for assistance  
+7. **review exchange (handoff → Claude review/patch)**  
+8. **commit** → finalize metadata, indices, and devlogs  
+   - **Use commit format defined in**  
+     `chatgpt-output-templates.md`
 9. **complete** → prompt for next layer or transition
 
 ---
